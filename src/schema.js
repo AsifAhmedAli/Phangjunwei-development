@@ -137,6 +137,7 @@ const typeDefs = gql`
     # Auth
     register(name: String!, email: String!, password: String!): User!
     login(email: String!, password: String!): ReturnToken
+    makeAdmin(email: String!): User!
     
     # User
     updateUser(name: String!, email: String!, password: String!): User!

@@ -12,12 +12,20 @@ const orderResolvers = require('./resolvers/orderResolvers');
 const productResolvers = require('./resolvers/productResolvers');
 const merchantResolvers = require('./resolvers/merchantResolvers');
 const wishlistResolvers = require('./resolvers/wishlistResolvers');
+const AuthResolvers = require('./resolvers/AuthResolvers');
 
 (async function () {
   const server = new ApolloServer({
     cors: true,
     typeDefs,
-    resolvers: _.merge(wishlistResolvers, userResolvers, cartResolvers, orderResolvers, productResolvers, merchantResolvers),
+    resolvers: _.merge(wishlistResolvers,
+      userResolvers,
+      AuthResolvers,
+      cartResolvers,
+      orderResolvers,
+      productResolvers,
+      merchantResolvers
+    ),
     context: ({ req, res }) => {
       const user = req.user || null;
       return {
@@ -39,6 +47,7 @@ const wishlistResolvers = require('./resolvers/wishlistResolvers');
       credentialsRequired: false,
     })
   );
+
   app.use((err, req, res, next) => {
     if (err.name === "UnauthorizedError") {
       return res.status(401).send({ error: "Invalid Request" });

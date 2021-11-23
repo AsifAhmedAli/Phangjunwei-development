@@ -20,6 +20,18 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      skuCompany: {
+        type: Sequelize.STRING
+      },
+      skuTag: {
+        type: Sequelize.STRING
+      },
+      skuColor: {
+        type: Sequelize.STRING
+      },
+      skuStyle: {
+        type: Sequelize.STRING
+      },
       skuPrice1: {
         type: Sequelize.FLOAT
       },

@@ -66,9 +66,7 @@ module.exports = {
                 // if the cursor of the end of the paginated results is the same as the
                 // last item in _all_ results, then there are no more results after this
                 hasMore: products.length
-                    ? products[products.length - 1].cursor !==
-                    allProducts[allProducts.length - 1].cursor
-                    : false,
+                    ? products[products.length - 1].cursor !== allProducts[allProducts.length - 1].cursor : false,
             };
         },
 

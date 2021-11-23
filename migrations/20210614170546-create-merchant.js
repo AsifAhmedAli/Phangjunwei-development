@@ -43,7 +43,14 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      
+      blocked: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
+      },
+      role: {
+        type: Sequelize.STRING,
+        defaultValue: 'Merchant'
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
