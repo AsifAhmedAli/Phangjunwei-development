@@ -12,27 +12,11 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Cart.belongsTo(models.User, { foreignKey: 'userId' });
-      Cart.hasMany(models.CartDetail);
+      Cart.hasOne(models.CartItem);
+      Cart.belongsToMany(models.Product, { through: models.CartItem });
     }
   };
-  Cart.init({
-    userId: DataTypes.INTEGER,
-    clientFirstName: DataTypes.STRING,
-    clientLastName: DataTypes.STRING,
-    clientEmail: DataTypes.STRING,
-    clientContactInfo: DataTypes.STRING,
-    refCode: DataTypes.STRING,
-    deliveryOption: DataTypes.STRING,
-    deliveryFee: DataTypes.FLOAT,
-    subTotal: DataTypes.FLOAT,
-    promoCode: DataTypes.STRING,
-    promoCodeValue: DataTypes.FLOAT,
-    deliveryAddress: DataTypes.STRING,
-    billingAddress: DataTypes.STRING,
-    paymentStatus: DataTypes.STRING,
-    paymentInfo: DataTypes.STRING,
-    status: DataTypes.STRING
-  }, {
+  Cart.init({}, {
     sequelize,
     modelName: 'Cart',
   });

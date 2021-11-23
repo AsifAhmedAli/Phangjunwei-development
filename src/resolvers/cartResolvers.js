@@ -1,3 +1,5 @@
+const { ForbiddenError } = require("apollo-server-express");
+
 module.exports = {
     Query: {
         async getCart(root, { id }, { models }) {
@@ -39,34 +41,24 @@ module.exports = {
             }
 
         },
-        async addToCart(root, { userId, productId, qty }, { models }) {
+        async addToCart(root, { userId, productId, qty }, { models, user }) {
             try {
-                const cart = await models.Cart.findOne({ where: { userId: userId } })
+                const foundUser = await models.User.findByPk(user.id, {
+                    include: [{ model: Cart }]
+                });
 
-                console.log("the cart is");
-                console.log(cart);
-                if (cart) {
-                    const [detail, isCreated] = await models.CartDetail.findOrCreate({
-                        where: { productId: productId },
-                        defaults: {
-                            qty,
-                            cartId: cart.id,
-                            productId: productId,
-                        }
-                    });
-
-                    if (!isCreated) {
-                        detail.update({
-                            qty: detail.qty + qty
-                        });
-                    }
+                if (!user) {
+                    throw new ForbiddenError('You must be logged in to add to cart');
                 }
 
-                return cart;
-            } catch (error) {
-                throw new Error(error.message);
-            }
+                const result = await sequelize.query('CALL add_to_cart(:cartId, :productId, :quantity)', {
+                    replacements: { cartId: user.cart.id, productId: parseInt(req.body.productId), quantity: parseInt(req.body.quantity) }
+                });
+                res.status(200).json({ true: 'Product Added to cart' });
 
+            } catch (error) {
+                return res.status(500).json({ false: 'Internal Server Error' });
+            }
         },
 
         async resetCartData(root, args, { models }) {

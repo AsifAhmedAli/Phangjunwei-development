@@ -12,7 +12,7 @@ const orderResolvers = require('./resolvers/orderResolvers');
 const productResolvers = require('./resolvers/productResolvers');
 const merchantResolvers = require('./resolvers/merchantResolvers');
 const wishlistResolvers = require('./resolvers/wishlistResolvers');
-const AuthResolvers = require('./resolvers/AuthResolvers');
+const authResolvers = require('./resolvers/authResolvers');
 
 (async function () {
   const server = new ApolloServer({
@@ -20,7 +20,7 @@ const AuthResolvers = require('./resolvers/AuthResolvers');
     typeDefs,
     resolvers: _.merge(wishlistResolvers,
       userResolvers,
-      AuthResolvers,
+      authResolvers,
       cartResolvers,
       orderResolvers,
       productResolvers,
