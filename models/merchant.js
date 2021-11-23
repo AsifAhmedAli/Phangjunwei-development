@@ -27,6 +27,7 @@ module.exports = (sequelize, DataTypes) => {
     merchantMoodshotImages: DataTypes.STRING,
     merchantAdImages: DataTypes.STRING,
     tier: DataTypes.STRING,
+    role: DataTypes.STRING,
     blocked: DataTypes.BOOLEAN
   }, {
     sequelize,

@@ -24,6 +24,7 @@ const typeDefs = gql`
     merchantMoodshotImages: String,
     merchantAdImages: String,
     blocked: Boolean
+    role: String
     user: User
     products: [Product!]
   }
@@ -157,6 +158,7 @@ const typeDefs = gql`
         merchantAdImages: String, 
         tier: String
         blocked: Boolean
+        role: String
       ): Merchant!
 
     updateMerchant(
@@ -171,6 +173,8 @@ const typeDefs = gql`
         merchantMoodshotImages: String,
         merchantAdImages: String, 
         tier: String
+        blocked: Boolean
+        role: String
     ): Merchant!
 
     merchantLogin(email: String!, password: String!): ReturnToken

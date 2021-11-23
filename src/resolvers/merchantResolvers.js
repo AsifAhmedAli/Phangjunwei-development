@@ -70,7 +70,7 @@ module.exports = {
                     if (user.role === "Admin" || user.role === "Superadmin") {
 
                         // Check if email exists
-                        const userExists = await models.User.findOne({ where: { email: email } });
+                        const userExists = await models.Merchant.findOne({ where: { email: email } });
 
                         if (userExists) {
                             throw new Error("Email already exists");

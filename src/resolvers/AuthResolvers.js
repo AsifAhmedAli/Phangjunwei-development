@@ -48,7 +48,6 @@ module.exports = {
                     message: 'Invalid username or password',
                     success: false,
                     user: null,
-                    merchant: null,
                 };
 
                 //Check password using bcrypt compare
@@ -61,14 +60,6 @@ module.exports = {
 
                 retVal.message = 'Successfull';
                 retVal.user = user;
-
-                if (user.role === 'merchant') {
-                    const merch = await models.Merchant.findOne({ where: { userId: user.id } });
-
-                    if (merch) {
-                        retVal.merchant = merch;
-                    }
-                }
 
                 const token = jwt.sign(
                     {
@@ -103,6 +94,10 @@ module.exports = {
 
                 if (!user) {
                     throw new Error('User not found');
+                }
+
+                if (user.role === 'Admin') {
+                    throw new Error('User already an admin');
                 }
 
                 user.role = 'Admin';

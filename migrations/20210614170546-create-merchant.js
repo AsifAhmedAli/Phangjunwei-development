@@ -8,10 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      userId: {
-        allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
-      },
       name: {
         allowNull: false,
         type: Sequelize.STRING
@@ -32,6 +28,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
+      password: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       tier: {
         type: Sequelize.STRING
       },
@@ -49,6 +49,7 @@ module.exports = {
       },
       role: {
         type: Sequelize.STRING,
+        allowNull: false,
         defaultValue: 'Merchant'
       }
     });

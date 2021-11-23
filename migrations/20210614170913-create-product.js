@@ -23,6 +23,9 @@ module.exports = {
       skuCompany: {
         type: Sequelize.STRING
       },
+      skuCategory: {
+        type: Sequelize.STRING
+      },
       skuTag: {
         type: Sequelize.STRING
       },
@@ -62,6 +65,10 @@ module.exports = {
       updatedAt: {
         allowNull: false,
         type: Sequelize.DATE
+      },
+      inWishlist: {
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       }
     });
   },
