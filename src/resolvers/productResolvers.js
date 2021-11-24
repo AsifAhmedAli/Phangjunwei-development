@@ -93,7 +93,7 @@ module.exports = {
             }, { models, user }) {
 
             if (user) {
-                if (user.role !== 'Admin') {
+                if (user.role !== 'Admin' && user.role !== 'Superadmin') {
                     throw new Error('Not authorized');
                 }
                 try {
@@ -204,10 +204,8 @@ module.exports = {
         },
         async orderDetails(product) {
             return product.getOrderDetails();
-        },
-        async cartDetails(product) {
-            return product.getCartDetails();
-        },
+        }
+
     },
 
 };

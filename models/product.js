@@ -29,10 +29,7 @@ module.exports = (sequelize, DataTypes) => {
     skuPrice3: DataTypes.FLOAT,
     skuPrice4: DataTypes.FLOAT,
     srpPrice: DataTypes.FLOAT,
-    inWishlist: {
-      type: DataTypes.BOOLEAN,
-      defaultValue: false
-    },
+    inWishlist: DataTypes.BOOLEAN,
     promoPrice: DataTypes.FLOAT,
     stockQty: DataTypes.INTEGER
   }, {

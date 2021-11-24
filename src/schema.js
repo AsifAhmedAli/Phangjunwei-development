@@ -25,7 +25,6 @@ const typeDefs = gql`
     merchantAdImages: String,
     blocked: Boolean
     role: String
-    user: User
     products: [Product!]
   }
 
@@ -48,27 +47,17 @@ const typeDefs = gql`
     stockQty: Int!
     merchant: Merchant!,
     orderDetails: [OrderDetail],
-    cartDetails: [CartDetail]
   }
 
   type Cart {
-    clientFirstName: String!,
-    clientLastName: String!,
-    clientEmail: String!,
-    clientContactInfo: String,
-    refCode: String,
-    deliveryOption: String,
-    deliveryFee: Float,
-    subTotal: Float,
-    promoCode: String,
-    promoCodeValue: Float,
-    deliveryAddress: String,
-    billingAddress: String,
-    paymentStatus: String,
-    paymentInfo: String,
-    status: String,
-    user: User!,
-    details: [CartDetail]
+    UserId: Int!
+  }
+
+  type CartItem{
+    ProductId: Int!
+    CartId: Int!
+    qty: Int!
+    price: Float!
   }
 
   type Order {
@@ -90,13 +79,6 @@ const typeDefs = gql`
     status: String,
     user: User!,
     details: [OrderDetail],
-  }
-
-  type CartDetail {
-    qty: Int,
-    clientContactInfo: String,
-    cart: Cart!,
-    product: Product!
   }
 
   type OrderDetail {
@@ -125,7 +107,7 @@ const typeDefs = gql`
     getProduct(id: Int!): Product
     searchProductsPaged(pageSize: Int, merchantId: Int!, after: String): ProductConnection
     
-    getCartByUser(id: Int!): Cart
+    getCartItems(id: Int!): [Product]
     getCart(id: Int!): Cart
 
     getOrdersByUser(id: Int!): [Order]
@@ -241,14 +223,9 @@ const typeDefs = gql`
     removeOrderByRefCode(refCode: String): Int
     
     #Cart
-    createCart(
-      userId: Int!, clientFirstName: String, clientLastName: String, clientEmail: String, clientContactInfo: String, deliveryOption: String,
-      deliveryFee: Float, subTotal: Float, promoCode: String, promoCodeValue: Float, deliveryAddress: String, billingAddress: String, paymentInfo: String
-    ): Cart!
-    clearCart(userId: Int!): Int
-    resetCartData: Int
-    addToCart(userId: Int!, productId: Int!, qty: Int!): Cart!
-    removeFromCart(userId: Int!, productId: Int!): Cart!
+    clearCart(id: Int!): Int
+    addToCart(productId: Int!): Cart!
+    removeFromCart(id: Int!, productId: Int!): CartItem!
 
     #Profile
     addToWishlist(userId: Int!, productId: Int!): User!

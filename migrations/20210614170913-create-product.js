@@ -8,10 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      merchantId: {
-        allowNull: false,
-        type: Sequelize.INTEGER.UNSIGNED
-      },
       skuId: {
         allowNull: false,
         type: Sequelize.STRING
@@ -69,6 +65,13 @@ module.exports = {
       inWishlist: {
         type: Sequelize.BOOLEAN,
         defaultValue: false
+      },
+      merchantId: {
+        type: Sequelize.INTEGER,
+        references: {
+          model: 'Merchants',
+          key: 'id'
+        }
       }
     });
   },

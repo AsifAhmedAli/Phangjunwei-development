@@ -46,7 +46,6 @@ module.exports = {
 
         },
 
-
     },
     Mutation: {
         // Create new merchant
@@ -223,7 +222,7 @@ module.exports = {
                     throw new ForbiddenError("UnAuthorized");
                 }
 
-                const checkIfExists = await models.Merchant.findOne({ where: { id } });
+                const checkIfExists = await models.Merchant.findOne({ where: { id: id } });
 
                 if (!checkIfExists) {
                     throw new Error("Merchant does not exist")
@@ -253,7 +252,7 @@ module.exports = {
                     throw new ForbiddenError("UnAuthorized");
                 }
 
-                const checkIfExists = await models.Merchant.findOne({ where: { id } });
+                const checkIfExists = await models.Merchant.findOne({ where: { id: id } });
 
                 if (!checkIfExists) {
                     throw new Error("Merchant does not exist")
@@ -277,9 +276,9 @@ module.exports = {
         async products(merchant) {
             return merchant.getProducts();
         },
-        async user(merchant) {
-            return merchant.getUser();
-        },
+        // async user(merchant) {
+        //     return merchant.getUser();
+        // },
     },
 
 };

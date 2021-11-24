@@ -12,7 +12,6 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Merchant.hasMany(models.Product);
-      // Merchant.belongsTo(models.User, { foreignKey: 'userId' });
     }
   };
   Merchant.init({

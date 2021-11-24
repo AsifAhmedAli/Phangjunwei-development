@@ -7,13 +7,6 @@ module.exports = {
 
         // Register Resolver
         async register(root, { name, email, password }, { models, user }) {
-            if (!user) {
-                throw new ForbiddenError("Not authorized");
-            }
-
-            if (user.role !== 'Superadmin') {
-                throw new ForbiddenError("Not authorized, contact Super-admin");
-            }
             try {
                 // Check if user already registered
                 const user = await models.User.findOne({ where: { email } });

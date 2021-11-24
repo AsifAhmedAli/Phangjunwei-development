@@ -4,97 +4,145 @@ module.exports = {
     Query: {
         async getCart(root, { id }, { models }) {
             try {
-                const result = await models.Cart.findByPk(id);
-                return result;
-            } catch (error) {
-                throw new Error(error.message);
-            }
-        },
-
-        async getCartByUser(root, { id }, { models }) {
-            try {
                 const result = await models.Cart.findOne({
                     where: { userId: id }
                 });
 
-                return result;
-
-            } catch (error) {
-                throw new Error(error.message);
-            }
-        },
-
-    },
-    Mutation: {
-
-        async clearCart(root, { userId }, { models }) {
-            try {
-                const cart = await models.Cart.findOne({ where: { userId: userId } });
-
-                await models.CartDetail.destroy({ where: { cartId: cart.id } });
-                const result = await models.Cart.destroy({ where: { userId: userId } });
-
-                return result;
-
-            } catch (error) {
-                throw new Error(error.message);
-            }
-
-        },
-        async addToCart(root, { userId, productId, qty }, { models, user }) {
-            try {
-                const foundUser = await models.User.findByPk(user.id, {
-                    include: [{ model: Cart }]
-                });
-
-                if (!user) {
-                    throw new ForbiddenError('You must be logged in to add to cart');
+                if (!result) {
+                    throw new Error('Cart not found');
                 }
 
-                const result = await sequelize.query('CALL add_to_cart(:cartId, :productId, :quantity)', {
-                    replacements: { cartId: user.cart.id, productId: parseInt(req.body.productId), quantity: parseInt(req.body.quantity) }
-                });
-                res.status(200).json({ true: 'Product Added to cart' });
-
-            } catch (error) {
-                return res.status(500).json({ false: 'Internal Server Error' });
-            }
-        },
-
-        async resetCartData(root, args, { models }) {
-            try {
-                const result = await models.Cart.destroy({ where: { id: { $gt: 0 } } });
-                await models.CartDetail.destroy({ where: { id: { $gt: 0 } } });
-
                 return result;
-
             } catch (error) {
-                // server error
                 throw new Error(error.message);
             }
         },
 
-
-
-        async removeFromCart(root, { userId, productId }, { models }) {
+        // get cart items
+        async getCartItems(root, { id }, { models }) {
             try {
-                const cart = await models.Cart.findOne({ where: { userId: userId } })
-                const prod = await models.Product.findOne({ where: { id: productId } });
+                const result = await models.CartItem.findAll({
+                    where: { CartId: id }
+                });
 
-                if (cart) {
-                    await models.CartDetail.destroy({
-                        where: {
-                            cartId: cart.id,
-                            productId: prod.id
-                        }
+                if (!result) {
+                    throw new Error('Cart items not found');
+                }
+
+                let products = [];
+                let foundItem;
+                // Fetch products
+                for (const item of result) {
+                    foundItem = await models.Product.findOne({
+                        where: { id: item.ProductId }
                     });
+
+                    if (!foundItem) {
+                        throw new Error('Product not found');
+                    }
+
+                    products.push(foundItem);
+                }
+
+                return products;
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        }
+    },
+    Mutation: {
+        async addToCart(root, { productId }, { models, user }) {
+            try {
+                const product = await models.Product.findByPk(productId);
+
+                // check if product exists
+                if (!product) {
+                    throw new Error("Product not found");
+                }
+
+                // Check if cart exists
+                const cart = await models.Cart.findOne({ where: { userId: user.id } });
+
+                if (!cart) {
+                    const newCart = await models.Cart.create({
+                        userId: user.id
+                    });
+
+                    const cartItem = await models.CartItem.create({
+                        CartId: newCart.id,
+                        ProductId: productId,
+                        qty: 1,
+                        price: product.price || 0
+                    })
+
+                    if (!cartItem || !newCart) {
+                        throw new Error("Error adding to cart");
+                    }
+
+                    return newCart;
+                }
+
+                // Check if cart item exists
+                const cartItem = await models.CartItem.findOne({
+                    where: { CartId: cart.id, ProductId: productId }
+                })
+
+                if (cartItem) {
+                    cartItem.qty = cartItem.qty + 1;
+                    await cartItem.save();
+                } else {
+                    const cartItem = await models.CartItem.create({
+                        CartId: cart.id,
+                        ProductId: productId,
+                        qty: 1,
+                        price: product.price || 0
+                    })
+
+                    if (!cartItem) {
+                        throw new Error("Error adding to cart");
+                    }
                 }
 
                 return cart;
+
             } catch (error) {
                 throw new Error(error.message);
             }
+        },
 
+        // Reset cart
+        async clearCart(root, { id }, { models }) {
+            try {
+                const result = await models.CartItem.destroy({
+                    where: { CartId: id }
+                });
+
+                if (!result) {
+                    throw new Error("invalid input");
+                }
+
+                return result;
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        },
+
+        // Remove item from cart
+        async removeFromCart(root, { id, productId }, { models }) {
+            try {
+                const result = await models.CartItem.destroy({
+                    where: { CartId: id, ProductId: productId }
+                });
+
+                if (!result) {
+                    throw new Error("Invalid input");
+                }
+
+                return result;
+            } catch (error) {
+                throw new Error(error.message);
+            }
         },
 
         async saveCartInformation(root, { userId, clientFirstName, clientLastName, clientEmail, clientContactInfo, deliveryOption,
@@ -122,24 +170,5 @@ module.exports = {
 
         },
     },
-
-
-    Cart: {
-        async user(cart) {
-            return cart.getUser();
-        },
-        async details(cart) {
-            return cart.getCartDetails();
-        }
-    },
-
-    CartDetail: {
-        async cart(dtl) {
-            return dtl.getCart();
-        },
-        async product(dtl) {
-            return dtl.getProduct();
-        }
-    }
 
 };
