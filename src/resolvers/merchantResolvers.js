@@ -218,7 +218,7 @@ module.exports = {
                     throw new ForbiddenError("You are not authorized to perform this action");
                 }
 
-                if (user.role !== "Admin") {
+                if (user.role !== "Admin" && user.role !== "Superadmin") {
                     throw new ForbiddenError("UnAuthorized");
                 }
 
@@ -228,13 +228,25 @@ module.exports = {
                     throw new Error("Merchant does not exist")
                 }
 
-                const result = await models.Merchant.update({
+                // Block merchant
+                await models.Merchant.update({
                     blocked: true
                 }, {
                     where: { id: id }
                 });
 
-                return result;
+                // Disable all products
+                const products = await models.Product.findAll({ where: { merchantId: id } });
+
+                for (let i = 0; i < products.length; i++) {
+                    await models.Product.update({
+                        disabled: true
+                    }, {
+                        where: { id: products[i].id }
+                    });
+                }
+
+                return checkIfExists;
 
             } catch (error) {
                 throw new Error(error.message)

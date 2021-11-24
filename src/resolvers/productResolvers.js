@@ -164,6 +164,7 @@ module.exports = {
             skuPrice4,
             srpPrice,
             promoPrice,
+            disabled,
             stockQty
         }, { models, user }) {
             if (user) {
@@ -182,6 +183,7 @@ module.exports = {
                             skuPrice3,
                             skuPrice4,
                             srpPrice,
+                            disabled,
                             promoPrice,
                             stockQty
                         });

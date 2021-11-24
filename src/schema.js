@@ -44,6 +44,7 @@ const typeDefs = gql`
     srpPrice: Float!
     promoPrice: Float
     inWishlist: Boolean
+    disabled: Boolean
     stockQty: Int!
     merchant: Merchant!,
     orderDetails: [OrderDetail],
@@ -194,6 +195,7 @@ const typeDefs = gql`
       skuPrice4: Float, 
       inWishlist: Boolean,
       srpPrice: Float!, 
+      disabled: Boolean,
       promoPrice: Float, 
       stockQty: Int!
     ): Product!
