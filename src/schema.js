@@ -10,6 +10,10 @@ const typeDefs = gql`
     orders: [Order!]
   }
 
+  type Message {
+    message: String!
+  }
+
   type Merchant {
     id: Int!
     name: String!
@@ -47,7 +51,6 @@ const typeDefs = gql`
     disabled: Boolean
     stockQty: Int!
     merchant: Merchant!,
-    orderDetails: [OrderDetail],
   }
 
   type Cart {
@@ -62,31 +65,28 @@ const typeDefs = gql`
   }
 
   type Order {
-    marchantId: Int!
+    userId: Int!
+  }
+
+  type OrderItem {
+    OrderId: Int!,
+    ProductId: Int!,
+    MerchantId: Int!,
     clientFirstName: String,
     clientLastName: String,
     clientEmail: String,
     clientContactInfo: String,
-    refCode: String,
-    deliveryOption: String,
-    deliveryFee: Float,
-    subTotal: Float,
-    promoCode: String,
-    promoCodeValue: Float,
+    refCode: Int,
+    deliveryOption: Int,
+    deliveryFee: Int,
+    subTotal: Int!,
+    promoCode: Int,
+    promoCodeValue: Int,
     deliveryAddress: String,
     billingAddress: String,
     paymentStatus: String,
     paymentInfo: String,
     status: String,
-    user: User!,
-    details: [OrderDetail],
-  }
-
-  type OrderDetail {
-    qty: Int,
-    clientContactInfo: String,
-    order: Order,
-    product: Product
   }
 
   type Wishlist {
@@ -111,9 +111,10 @@ const typeDefs = gql`
     getCartItems(id: Int!): [Product]
     getCart(id: Int!): Cart
 
-    getOrdersByUser(id: Int!): [Order]
-    getOrder(id: Int!): Order
-    allOrders: [Order]
+    getUserOrders(id: Int!): [OrderItem]
+    getOrder(id: Int!): [OrderItem]
+    allOrders: [OrderItem]
+    getMerchantOrders(id: Int!): [OrderItem]
   }
 
   type Mutation {
@@ -202,31 +203,30 @@ const typeDefs = gql`
     
     #Order
     createOrder(
-      merchantId: Int, 
-      clientFirstName: String!, 
-      clientLastName: String!, 
-      clientEmail: String!, 
-      clientContactInfo: String!, 
-      refCode: String!, 
+      clientFirstName: String!,
+      clientLastName: String!,
+      clientEmail: String!,
+      clientContactInfo: String!,
+      refCode: Int,
       deliveryOption: String,
-      deliveryFee: Float, 
-      subTotal: Float, 
-      promoCode: String, 
-      promoCodeValue: Float, 
-      deliveryAddress: String!, 
-      billingAddress: String!, 
-      paymentStatus: String!,
-      paymentInfo: String!, 
-      status: String!
-    ): Order!
+      deliveryFee: Float!,
+      subTotal: Float!,
+      promoCode: String,
+      promoCodeValue: Float,
+      deliveryAddress: String!,
+      billingAddress: String,
+      paymentStatus: String,
+      paymentInfo: String,
+    ): Message!
 
     addToOrder(refCode: String!, productId: Int!, qty: Int!): Order!
-    updateOrderByRefCode (refCode: String!, status: String!): Order
-    removeOrderByRefCode(refCode: String): Int
+    updateOrder(id: Int!, status: String): Message!
+    deleteOrder(id: Int!): Message!
+    removeOrderByRefCode(refCode: String): Int!
     
     #Cart
     clearCart(id: Int!): Int
-    addToCart(productId: Int!): Cart!
+    addToCart(productId: Int!): Message!
     removeFromCart(id: Int!, productId: Int!): CartItem!
 
     #Profile

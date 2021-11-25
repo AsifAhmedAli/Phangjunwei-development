@@ -1,38 +1,76 @@
 module.exports = {
     Query: {
-
         async getOrder(root, { id }, { models, user }) {
             if (!user) {
                 throw new Error('You must be logged in to view this page')
             }
             try {
-                const result = await models.Order.findByPk(id);
-                return result;
+                const order = await models.Order.findByPk(id);
+                const orderItems = await models.OrderItem.findAll({ where: { OrderId: order.id } });
+
+                if (!order) {
+                    throw new Error('Order not found');
+                }
+
+                if (!orderItems) {
+                    throw new Error('Empty Order');
+                }
+
+                return orderItems;
             } catch (error) {
                 throw new Error(error.message);
             }
         },
 
-        async getOrdersByUser(root, { id }, { models, user }) {
+        // Get merchant orders by its products
+        async getMerchantOrders(root, { id }, { models, user }) {
             try {
+                if (!user && user.role !== 'merchant') {
+                    throw new Error('Invalid Request')
+                }
 
+                const orderItems = await models.OrderItem.findAll({ where: { MerchantId: id } });
+
+                if (!orderItems) {
+                    throw new Error('Order not found');
+                }
+
+                return orderItems;
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        },
+
+        async getUserOrders(root, { id }, { models, user }) {
+            try {
                 if (!user) {
                     throw new Error('You must be logged in to view this page')
                 }
-                if (user.role !== 'Admin' && user.role !== 'Superadmin') {
-                    throw new Error('UnAuthorized')
+
+                if (user.role !== 'admin' && user.role !== 'Superadmin') {
+                    throw new Error('You are not authorized to view this page')
                 }
 
-                const result = await models.Order.findAll({
-                    where: { merchantId: id }
-                });
+                const order = await models.Order.findAll({ where: { userId: id } });
 
-                return result;
+                if (!order) {
+                    throw new Error('Order not found');
+                }
 
+                let allOrders = [];
+                let orderItems;
+
+                for (let o of order) {
+                    orderItems = await models.OrderItem.findOne({ where: { OrderId: o.id } });
+                    allOrders.push(orderItems);
+                }
+
+                return allOrders;
             } catch (error) {
                 throw new Error(error.message);
             }
         },
+
         async allOrders(root, args, { models, user }) {
             try {
                 if (!user) {
@@ -41,12 +79,29 @@ module.exports = {
                 if (user.role !== 'Admin' && user.role !== 'Superadmin') {
                     throw new Error('UnAuthorized')
                 }
-                const result = await models.Order.findAll();
-                return result;
+                const orders = await models.Order.findAll();
+
+                if (!orders) {
+                    throw new Error('No orders found');
+                }
+
+                // Get order Items
+                let orderItems = [];
+                let foundItem;
+
+                for (const item of orders) {
+                    foundItem = await models.OrderItem.findOne({
+                        where: { OrderId: item.id }
+                    });
+
+                    orderItems.push(foundItem);
+                }
+
+                return orderItems;
+
             } catch (error) {
                 throw new Error(error.message);
             }
-
         },
     },
     Mutation: {
@@ -66,112 +121,110 @@ module.exports = {
             billingAddress,
             paymentStatus,
             paymentInfo,
-            status
-        }, { models }) {
+        }, { models, user }) {
 
             try {
-                const result = await models.Order.create({
-                    merchantId: 5,
-                    clientFirstName,
-                    clientLastName,
-                    clientEmail,
-                    clientContactInfo,
-                    refCode,
-                    deliveryOption,
-                    deliveryFee,
-                    subTotal,
-                    promoCode,
-                    promoCodeValue,
-                    deliveryAddress,
-                    billingAddress,
-                    paymentStatus,
-                    paymentInfo,
-                    status
-                });
+                if (!user) {
+                    throw new Error('You must be logged in to view this page')
+                }
 
-                return result;
-            } catch (error) {
-                throw new Error(error.message);
-            }
-        },
+                // Create New Order
+                const createdOrder = await models.Order.create({ userId: user.id });
 
-        async removeOrderByRefCode(root, { refCode }, { models }) {
-            try {
-                const result = await models.Order.destroy({
-                    where: { refCode: refCode }
-                });
+                // Get User Cart
+                const userCart = await models.Cart.findOne({ where: { userId: user.id } });
 
-                return result;
-            } catch (error) {
-                throw new Error(error.message);
-            }
+                if (!userCart) {
+                    throw new Error('No cart found');
+                }
 
-        },
+                // Get User Cart Items
+                const userCartItems = await models.CartItem.findAll({ where: { CartId: userCart.id } });
 
-        async updateOrderByRefCode(root, { refCode, status }, { models }) {
-            try {
-                const result = await models.Order.findOne({ where: { refCode: refCode } });
+                if (!userCartItems) {
+                    throw new Error('Cart is empty');
+                }
 
-                if (result) {
-                    result.update({
-                        status
+                // loop through cart items and add order items
+                for (const item of userCartItems) {
+                    await models.OrderItem.create({
+                        OrderId: createdOrder.id,
+                        ProductId: item.ProductId,
+                        MerchantId: item.MerchantId,
+                        clientFirstName,
+                        clientLastName,
+                        clientEmail,
+                        clientContactInfo,
+                        refCode,
+                        deliveryOption,
+                        deliveryFee,
+                        subTotal,
+                        promoCode,
+                        promoCodeValue,
+                        deliveryAddress,
+                        billingAddress,
+                        paymentStatus,
+                        paymentInfo,
                     });
                 }
 
-                return result;
+                return {
+                    message: 'Order Created Successfully',
+                };
+
             } catch (error) {
                 throw new Error(error.message);
             }
         },
 
-
-        async addToOrder(root, { refCode, productId, qty }, { models }) {
+        // UPdate Order Item
+        async updateOrder(root, { id, status }, { models, user }) {
             try {
-                const order = await models.Order.findOne({ where: { refCode: refCode } });
-
-                console.log(order);
-                if (order) {
-                    const [detail, isCreated] = await models.OrderDetail.findOrCreate({
-                        where: { productId: productId },
-                        defaults: {
-                            qty: qty,
-                            orderId: order.id,
-                            productId: productId
-                        }
-                    });
-
-                    if (!isCreated) {
-                        detail.update({
-                            qty: detail.qty + qty
-                        });
-                    }
+                if (!user) {
+                    throw new Error('You must be logged in to view this page')
                 }
 
-                return order;
+                const order = await models.OrderItem.findOne({ where: { OrderId: id } });
+
+                if (!order) {
+                    throw new Error('Order not found');
+                }
+
+                await models.OrderItem.update({ paymentStatus: status }, { where: { OrderId: id } });
+
+                return {
+                    message: 'Order Updated Successfully',
+                };
+
             } catch (error) {
                 throw new Error(error.message);
             }
         },
 
+        // Delete Order Item
+        async deleteOrder(root, { id }, { models, user }) {
+            try {
+                if (!user) {
+                    throw new Error('You must be logged in to view this page')
+                }
 
-    },
+                const order = await models.OrderItem.findOne({ where: { OrderId: id } });
 
-    Order: {
-        async user(order) {
-            return order.getUser();
-        },
-        async details(order) {
-            return order.getOrderDetails();
+                if (!order) {
+                    throw new Error('Order not found');
+                }
+
+                await models.OrderItem.destroy({ where: { OrderId: id } });
+
+                return {
+                    message: 'Order Deleted Successfully',
+                };
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
         }
-    },
 
-    OrderDetail: {
-        async order(dtl) {
-            return dtl.getOrder();
-        },
-        async product(dtl) {
-            return dtl.getProduct();
-        }
     },
 
 };

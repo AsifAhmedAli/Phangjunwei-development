@@ -13,7 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Product.belongsTo(models.Merchant, { foreignKey: 'merchantId' });
       Product.belongsToMany(models.Cart, { through: models.CartItem });
-      Product.hasMany(models.OrderDetail);
+      Product.belongsToMany(models.Order, { through: models.OrderItem });
     }
   };
   Product.init({

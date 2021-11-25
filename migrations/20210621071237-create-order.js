@@ -8,50 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      clientFirstName: {
-        type: Sequelize.STRING
-      },
-      clientLastName: {
-        type: Sequelize.STRING
-      },
-      clientEmail: {
-        type: Sequelize.STRING
-      },
-      clientContactInfo: {
-        type: Sequelize.STRING
-      },
-      refCode: {
-        type: Sequelize.STRING
-      },
-      deliveryOption: {
-        type: Sequelize.STRING
-      },
-      deliveryFee: {
-        type: Sequelize.FLOAT
-      },
-      subTotal: {
-        type: Sequelize.FLOAT
-      },
-      promoCode: {
-        type: Sequelize.STRING
-      },
-      promoCodeValue: {
-        type: Sequelize.FLOAT
-      },
-      deliveryAddress: {
-        type: Sequelize.STRING
-      },
-      billingAddress: {
-        type: Sequelize.STRING
-      },
-      paymentStatus: {
-        type: Sequelize.STRING
-      },
-      paymentInfo: {
-        type: Sequelize.STRING
-      },
-      status: {
-        type: Sequelize.STRING
+      userId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        references: { model: "Users", key: "id" }
       },
       createdAt: {
         allowNull: false,

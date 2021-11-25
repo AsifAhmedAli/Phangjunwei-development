@@ -72,6 +72,7 @@ module.exports = {
                     const cartItem = await models.CartItem.create({
                         CartId: newCart.id,
                         ProductId: productId,
+                        MerchantId: product.merchantId,
                         qty: 1,
                         price: product.price || 0
                     })
@@ -95,6 +96,7 @@ module.exports = {
                     const cartItem = await models.CartItem.create({
                         CartId: cart.id,
                         ProductId: productId,
+                        MerchantId: product.merchantId,
                         qty: 1,
                         price: product.price || 0
                     })
@@ -104,7 +106,9 @@ module.exports = {
                     }
                 }
 
-                return cart;
+                return {
+                    message: "Product added to cart"
+                };
 
             } catch (error) {
                 throw new Error(error.message);
@@ -145,30 +149,30 @@ module.exports = {
             }
         },
 
-        async saveCartInformation(root, { userId, clientFirstName, clientLastName, clientEmail, clientContactInfo, deliveryOption,
-            deliveryFee, paymentInfo }, { models }) {
-            try {
-                const cart = await models.Cart.findOne({ where: { userId: userId } });
+        // async saveCartInformation(root, { userId, clientFirstName, clientLastName, clientEmail, clientContactInfo, deliveryOption,
+        //     deliveryFee, paymentInfo }, { models }) {
+        //     try {
+        //         const cart = await models.Cart.findOne({ where: { userId: userId } });
 
-                if (cart) {
-                    await cart.update({
-                        clientFirstName,
-                        clientLastName,
-                        clientEmail,
-                        clientContactInfo,
-                        deliveryOption,
-                        deliveryFee,
-                        paymentInfo
-                    });
-                }
+        //         if (cart) {
+        //             await cart.update({
+        //                 clientFirstName,
+        //                 clientLastName,
+        //                 clientEmail,
+        //                 clientContactInfo,
+        //                 deliveryOption,
+        //                 deliveryFee,
+        //                 paymentInfo
+        //             });
+        //         }
 
-                return cart;
+        //         return cart;
 
-            } catch (error) {
-                throw new Error(error.message);
-            }
+        //     } catch (error) {
+        //         throw new Error(error.message);
+        //     }
 
-        },
+        // },
     },
 
 };

@@ -15,6 +15,10 @@ module.exports = {
       ProductId: {
         type: Sequelize.INTEGER
       },
+      MerchantId: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+      },
       qty: {
         type: Sequelize.INTEGER,
         allowNull: false,

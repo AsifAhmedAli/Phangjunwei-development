@@ -204,10 +204,6 @@ module.exports = {
         async merchant(product) {
             return product.getMerchant();
         },
-        async orderDetails(product) {
-            return product.getOrderDetails();
-        }
-
     },
 
 };

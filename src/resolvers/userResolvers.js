@@ -104,9 +104,6 @@ module.exports = {
         async wishlists(usr) {
             return usr.getWishlists();
         },
-        async orders(usr) {
-            return usr.getOrders();
-        }
     }
 
 };
