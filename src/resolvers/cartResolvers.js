@@ -149,30 +149,6 @@ module.exports = {
             }
         },
 
-        // async saveCartInformation(root, { userId, clientFirstName, clientLastName, clientEmail, clientContactInfo, deliveryOption,
-        //     deliveryFee, paymentInfo }, { models }) {
-        //     try {
-        //         const cart = await models.Cart.findOne({ where: { userId: userId } });
-
-        //         if (cart) {
-        //             await cart.update({
-        //                 clientFirstName,
-        //                 clientLastName,
-        //                 clientEmail,
-        //                 clientContactInfo,
-        //                 deliveryOption,
-        //                 deliveryFee,
-        //                 paymentInfo
-        //             });
-        //         }
-
-        //         return cart;
-
-        //     } catch (error) {
-        //         throw new Error(error.message);
-        //     }
-
-        // },
     },
 
 };

@@ -97,24 +97,29 @@ const typeDefs = gql`
   }
 
   type Query {
+    # Users
     allUser: [User]
     getUser(id: Int!): User
 
+    # Merchants
     allMerchants: [Merchant!]!
     getMerchant(id: Int!): Merchant
     merchantProducts(merchantId: Int!): [Product]
+    merchantOrders(id: Int!): [OrderItem]
 
+    # Products
     allProducts(offset: Int, limit: Int): [Product]
     getProduct(id: Int!): Product
     searchProductsPaged(pageSize: Int, merchantId: Int!, after: String): ProductConnection
     
+    # Cart
     getCartItems(id: Int!): [Product]
     getCart(id: Int!): Cart
 
+    # Orders
     getUserOrders(id: Int!): [OrderItem]
     getOrder(id: Int!): [OrderItem]
     allOrders: [OrderItem]
-    getMerchantOrders(id: Int!): [OrderItem]
   }
 
   type Mutation {
@@ -222,7 +227,6 @@ const typeDefs = gql`
     addToOrder(refCode: String!, productId: Int!, qty: Int!): Order!
     updateOrder(id: Int!, status: String): Message!
     deleteOrder(id: Int!): Message!
-    removeOrderByRefCode(refCode: String): Int!
     
     #Cart
     clearCart(id: Int!): Int

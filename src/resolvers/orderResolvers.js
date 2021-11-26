@@ -4,6 +4,7 @@ module.exports = {
             if (!user) {
                 throw new Error('You must be logged in to view this page')
             }
+
             try {
                 const order = await models.Order.findByPk(id);
                 const orderItems = await models.OrderItem.findAll({ where: { OrderId: order.id } });
@@ -22,35 +23,16 @@ module.exports = {
             }
         },
 
-        // Get merchant orders by its products
-        async getMerchantOrders(root, { id }, { models, user }) {
-            try {
-                if (!user && user.role !== 'merchant') {
-                    throw new Error('Invalid Request')
-                }
-
-                const orderItems = await models.OrderItem.findAll({ where: { MerchantId: id } });
-
-                if (!orderItems) {
-                    throw new Error('Order not found');
-                }
-
-                return orderItems;
-            } catch (error) {
-                throw new Error(error.message);
-            }
-        },
-
         async getUserOrders(root, { id }, { models, user }) {
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
+
+            if (user.role !== 'admin' && user.role !== 'Superadmin') {
+                throw new Error('You are not authorized to view this page')
+            }
+
             try {
-                if (!user) {
-                    throw new Error('You must be logged in to view this page')
-                }
-
-                if (user.role !== 'admin' && user.role !== 'Superadmin') {
-                    throw new Error('You are not authorized to view this page')
-                }
-
                 const order = await models.Order.findAll({ where: { userId: id } });
 
                 if (!order) {
@@ -72,13 +54,15 @@ module.exports = {
         },
 
         async allOrders(root, args, { models, user }) {
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
+
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new Error('UnAuthorized')
+            }
+
             try {
-                if (!user) {
-                    throw new Error('You must be logged in to view this page')
-                }
-                if (user.role !== 'Admin' && user.role !== 'Superadmin') {
-                    throw new Error('UnAuthorized')
-                }
                 const orders = await models.Order.findAll();
 
                 if (!orders) {
@@ -123,11 +107,11 @@ module.exports = {
             paymentInfo,
         }, { models, user }) {
 
-            try {
-                if (!user) {
-                    throw new Error('You must be logged in to view this page')
-                }
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
 
+            try {
                 // Create New Order
                 const createdOrder = await models.Order.create({ userId: user.id });
 
@@ -179,11 +163,11 @@ module.exports = {
 
         // UPdate Order Item
         async updateOrder(root, { id, status }, { models, user }) {
-            try {
-                if (!user) {
-                    throw new Error('You must be logged in to view this page')
-                }
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
 
+            try {
                 const order = await models.OrderItem.findOne({ where: { OrderId: id } });
 
                 if (!order) {
@@ -203,11 +187,11 @@ module.exports = {
 
         // Delete Order Item
         async deleteOrder(root, { id }, { models, user }) {
-            try {
-                if (!user) {
-                    throw new Error('You must be logged in to view this page')
-                }
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
 
+            try {
                 const order = await models.OrderItem.findOne({ where: { OrderId: id } });
 
                 if (!order) {

@@ -92,66 +92,68 @@ module.exports = {
                 merchantId
             }, { models, user }) {
 
-            if (user) {
-                if (user.role !== 'Admin' && user.role !== 'Superadmin') {
-                    throw new Error('Not authorized');
-                }
-                try {
-                    // Check if merchant exists;
-                    const merchant = await models.Merchant.findByPk(merchantId);
-
-                    if (!merchant) {
-                        throw new Error('Merchant does not exist, Please register the Merchant first');
-                    }
-
-                    const result = await models.Product.create({
-                        merchantId,
-                        skuId,
-                        skuName,
-                        skuCompany,
-                        skuCategory,
-                        skuStyle,
-                        skuTag,
-                        skuColor,
-                        skuPrice1,
-                        skuPrice2,
-                        skuPrice3,
-                        skuPrice4,
-                        srpPrice,
-                        promoPrice,
-                        stockQty
-                    });
-
-                    return result;
-
-                } catch (error) {
-                    throw new Error(error.message);
-                }
+            if (!user) {
+                throw new ForbiddenError("Not authorized");
             }
-            else {
-                throw new Error('Please Login first');
+
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new Error('Not authorized');
             }
+
+            try {
+                // Check if merchant exists;
+                const merchant = await models.Merchant.findByPk(merchantId);
+
+                if (!merchant) {
+                    throw new Error('Merchant does not exist, Please register the Merchant first');
+                }
+
+                const result = await models.Product.create({
+                    merchantId,
+                    skuId,
+                    skuName,
+                    skuCompany,
+                    skuCategory,
+                    skuStyle,
+                    skuTag,
+                    skuColor,
+                    skuPrice1,
+                    skuPrice2,
+                    skuPrice3,
+                    skuPrice4,
+                    srpPrice,
+                    promoPrice,
+                    stockQty
+                });
+
+                return result;
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+
         },
 
         async removeProduct(root, { id }, { models, user }) {
-            if (user) {
-                if (user.role !== 'Admin') {
-                    throw new Error('Not authorized');
-                }
-                try {
-                    const result = models.Product.destroy({
-                        where: { id: id }
-                    });
-
-                    return result;
-
-                } catch (error) {
-                    throw new Error(error.message);
-                }
+            if (!user) {
+                throw new ForbiddenError("Not authorized");
             }
-            else {
-                throw new Error('Please Login first');
+
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new Error('Not authorized');
             }
+
+            try {
+                const result = models.Product.destroy({
+                    where: { id: id }
+                });
+
+                return result;
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+
         },
 
         async updateProduct(root, {
@@ -167,39 +169,39 @@ module.exports = {
             disabled,
             stockQty
         }, { models, user }) {
-            if (user) {
-                if (user.role !== 'Admin') {
-                    throw new Error('Not authorized');
-                }
-                try {
-                    const result = await models.Product.findByPk(id);
-
-                    if (result) {
-                        result.update({
-                            skuId,
-                            skuName,
-                            skuPrice1,
-                            skuPrice2,
-                            skuPrice3,
-                            skuPrice4,
-                            srpPrice,
-                            disabled,
-                            promoPrice,
-                            stockQty
-                        });
-                    }
-
-                    return result
-                } catch (error) {
-                    throw new Error(error.message);
-                }
+            if (!user) {
+                throw new ForbiddenError("Not authorized");
             }
-            else {
-                throw new Error('Please Login first');
-            }
-        },
 
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new Error('Not authorized');
+            }
+
+            try {
+                const result = await models.Product.findByPk(id);
+
+                if (result) {
+                    result.update({
+                        skuId,
+                        skuName,
+                        skuPrice1,
+                        skuPrice2,
+                        skuPrice3,
+                        skuPrice4,
+                        srpPrice,
+                        disabled,
+                        promoPrice,
+                        stockQty
+                    });
+                }
+
+                return result
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        }
     },
+
     Product: {
         async merchant(product) {
             return product.getMerchant();

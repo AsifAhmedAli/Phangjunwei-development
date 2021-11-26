@@ -5,16 +5,17 @@ const { ForbiddenError } = require("apollo-server-express");
 module.exports = {
     Query: {
         async allUser(root, args, { models, user }) {
+            if (!user) {
+                throw new ForbiddenError("Not authorized, Signin again");
+            }
+
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new ForbiddenError("Not authorized");
+            }
+
             try {
-                if (user === null) {
-                    throw new ForbiddenError("Token not valid, try signing in again");
-                }
-                if (user.role !== 'Admin' && user.role !== 'Superadmin') {
-                    throw new ForbiddenError("Not authorized");
-                }
                 const result = await models.User.findAll();
                 return result;
-
             } catch (error) {
                 throw new Error(error.message);
             }
