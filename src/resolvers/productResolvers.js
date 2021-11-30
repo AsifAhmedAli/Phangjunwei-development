@@ -46,6 +46,30 @@ module.exports = {
             }
         },
 
+        // Get all products with a specific type
+        async parentProducts(root, { type, merchantId }, { models, user }) {
+            if (!user) {
+                throw new ForbiddenError("Not authorized");
+            }
+
+            if (user.role !== "Admin" && user.role !== "Superadmin") {
+                throw new ForbiddenError("Not authorized");
+            }
+
+            try {
+                const result = await models.Product.findAll({
+                    where: { type: type, merchantId: merchantId }
+                });
+
+                return result;
+
+            } catch (error) {
+                throw new Error(error.message)
+            }
+        },
+
+
+        // Paginated products
         async searchProductsPaged(root, { pageSize = 20, merchantId, after }, { models }) {
             const allProducts = await models.Product.findAll({
                 where: { merchantId: merchantId }
@@ -87,6 +111,8 @@ module.exports = {
                 skuPrice3,
                 skuPrice4,
                 srpPrice,
+                type,
+                parentId,
                 promoPrice,
                 stockQty,
                 merchantId
@@ -117,6 +143,8 @@ module.exports = {
                     skuStyle,
                     skuTag,
                     skuColor,
+                    type: type.toLowerCase(),
+                    parentId: parentId || null,
                     skuPrice1,
                     skuPrice2,
                     skuPrice3,

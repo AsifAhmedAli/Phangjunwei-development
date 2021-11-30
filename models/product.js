@@ -25,6 +25,8 @@ module.exports = (sequelize, DataTypes) => {
     skuCompany: DataTypes.STRING,
     skuColor: DataTypes.STRING,
     skuPrice1: DataTypes.FLOAT,
+    type: DataTypes.STRING,
+    parentId: DataTypes.INTEGER,
     skuPrice2: DataTypes.FLOAT,
     skuPrice3: DataTypes.FLOAT,
     skuPrice4: DataTypes.FLOAT,

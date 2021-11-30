@@ -46,6 +46,8 @@ const typeDefs = gql`
     skuPrice3: Float
     skuPrice4: Float
     srpPrice: Float!
+    type: String!
+    parentId: Int
     promoPrice: Float
     inWishlist: Boolean
     disabled: Boolean
@@ -110,6 +112,7 @@ const typeDefs = gql`
     # Products
     allProducts(offset: Int, limit: Int): [Product]
     getProduct(id: Int!): Product
+    parentProducts(type: String!, merchantId: Int!): [Product]
     searchProductsPaged(pageSize: Int, merchantId: Int!, after: String): ProductConnection
     
     # Cart
@@ -128,6 +131,7 @@ const typeDefs = gql`
     register(name: String!, email: String!, password: String!): User!
     login(email: String!, password: String!): ReturnToken
     makeAdmin(email: String!): User!
+    merchantLogin(email: String!, password: String!): ReturnToken
     
     # User
     updateUser(name: String!, email: String!, password: String!): User!
@@ -166,7 +170,6 @@ const typeDefs = gql`
         role: String
     ): Merchant!
 
-    merchantLogin(email: String!, password: String!): ReturnToken
     removeMerchant(id: Int!): Int
     blockMerchant(id: Int!): Merchant!
     unblockMerchant(id: Int!): Merchant!
@@ -185,6 +188,8 @@ const typeDefs = gql`
       skuPrice3: Float, 
       skuPrice4: Float, 
       srpPrice: Float!, 
+      type: String!
+      parentId: Int
       inWishlist: Boolean,
       promoPrice: Float, 
       stockQty: Int!, 

@@ -50,6 +50,13 @@ module.exports = {
       promoPrice: {
         type: Sequelize.FLOAT
       },
+      type: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      parentId: {
+        type: Sequelize.INTEGER,
+      },
       stockQty: {
         allowNull: false,
         type: Sequelize.INTEGER

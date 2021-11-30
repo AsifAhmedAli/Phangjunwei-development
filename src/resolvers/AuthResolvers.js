@@ -8,7 +8,6 @@ module.exports = {
         // Register Resolver
         async register(root, { name, email, password }, { models, user }) {
             try {
-                // Check if user already registered
                 const user = await models.User.findOne({ where: { email } });
 
                 if (user) {
@@ -42,8 +41,6 @@ module.exports = {
                     success: false,
                     user: null,
                 };
-
-                //Check password using bcrypt compare
 
                 retVal.success = await bcrypt.compare(password, user.password);
 
@@ -100,6 +97,38 @@ module.exports = {
                 return user;
             } catch (error) {
                 throw new Error(error.message);
+            }
+        },
+
+        // Merchant login Resolver
+        async merchantLogin(root, { email, password }, { models }) {
+            try {
+                const merchant = await models.Merchant.findOne({ where: { email: email } });
+
+                if (!merchant) {
+                    throw new Error("Email does not exist");
+                }
+
+                if (merchant.blocked === true) {
+                    throw new Error("You have been blocked by the administration");
+                }
+
+                const trueUser = await bcrypt.compare(password, merchant.password);
+                if (!trueUser) {
+                    throw new Error("Incorrect password");
+                }
+
+                const token = jwt.sign({
+                    id: merchant.id,
+                    name: merchant.name,
+                    email: merchant.email,
+                    blocked: merchant.blocked,
+                }, process.env.JWT_SECRET, { expiresIn: "1h" })
+
+                return { token };
+
+            } catch (error) {
+                throw new Error(error.message)
             }
         }
     },

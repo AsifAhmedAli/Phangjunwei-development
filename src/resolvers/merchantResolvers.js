@@ -1,7 +1,6 @@
 const { ForbiddenError } = require("apollo-server-express");
 const bcrypt = require('bcryptjs');
-const jwt = require("jsonwebtoken");
-// const { Op } = require("sequelize");
+const blockSwitchMerchant = require("../helpers/blockSwitchMerchant");
 
 module.exports = {
     Query: {
@@ -176,38 +175,6 @@ module.exports = {
             }
         },
 
-        // Merchant login
-        async merchantLogin(root, { email, password }, { models }) {
-            try {
-                const merchant = await models.Merchant.findOne({ where: { email: email } });
-
-                if (!merchant) {
-                    throw new Error("Email does not exist");
-                }
-
-                if (merchant.blocked === true) {
-                    throw new Error("You have been blocked by the administration");
-                }
-
-                const trueUser = await bcrypt.compare(password, merchant.password);
-                if (!trueUser) {
-                    throw new Error("Incorrect password");
-                }
-
-                const token = jwt.sign({
-                    id: merchant.id,
-                    name: merchant.name,
-                    email: merchant.email,
-                    blocked: merchant.blocked,
-                }, process.env.JWT_SECRET, { expiresIn: "1h" })
-
-                return { token };
-
-            } catch (error) {
-                throw new Error(error.message)
-            }
-        },
-
         async removeMerchant(root, { id }, { models, user }) {
             if (!user) {
                 throw new ForbiddenError("You are not authorized to perform this action");
@@ -234,41 +201,9 @@ module.exports = {
 
         // Block merchant
         async blockMerchant(root, { id }, { models, user }) {
-            if (!user) {
-                throw new ForbiddenError("You are not authorized to perform this action");
-            }
-
-            if (user.role !== "Admin" && user.role !== "Superadmin") {
-                throw new ForbiddenError("You are not authorized to perform this action");
-            }
-
             try {
-                const checkIfExists = await models.Merchant.findOne({ where: { id: id } });
-
-                if (!checkIfExists) {
-                    throw new Error("Merchant does not exist")
-                }
-
-                // Block merchant
-                await models.Merchant.update({
-                    blocked: true
-                }, {
-                    where: { id: id }
-                });
-
-                // Disable all products
-                const products = await models.Product.findAll({ where: { merchantId: id } });
-
-                for (let i = 0; i < products.length; i++) {
-                    await models.Product.update({
-                        disabled: true
-                    }, {
-                        where: { id: products[i].id }
-                    });
-                }
-
-                return checkIfExists;
-
+                const response = blockSwitchMerchant(id, models, user, true);
+                return response;
             } catch (error) {
                 throw new Error(error.message)
             }
@@ -276,29 +211,9 @@ module.exports = {
 
         // Unblock merchant
         async unblockMerchant(root, { id }, { models, user }) {
-            if (!user) {
-                throw new ForbiddenError("You are not authorized to perform this action");
-            }
-
-            if (user.role !== "Admin" && user.role !== "Superadmin") {
-                throw new ForbiddenError("You are not authorized to perform this action");
-            }
-
             try {
-                const checkIfExists = await models.Merchant.findOne({ where: { id: id } });
-
-                if (!checkIfExists) {
-                    throw new Error("Merchant does not exist")
-                }
-
-                const result = await models.Merchant.update({
-                    blocked: false
-                }, {
-                    where: { id: id }
-                });
-
-                return result;
-
+                const response = blockSwitchMerchant(id, models, user, false);
+                return response;
             } catch (error) {
                 throw new Error(error.message)
             }
