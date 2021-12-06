@@ -1,12 +1,14 @@
 const { ForbiddenError } = require("apollo-server-express");
 const bcrypt = require('bcryptjs');
 const blockSwitchMerchant = require("../helpers/blockSwitchMerchant");
+const { paginateResults } = require('../utils');
 
 module.exports = {
     Query: {
 
         // Get all merchants registered
-        async allMerchants(root, args, { models, user }) {
+        async allMerchants(root, { size, offset }, { models, user }) {
+
             if (!user) {
                 throw new Error("Please login to view all merchants");
             }
@@ -15,11 +17,10 @@ module.exports = {
                 throw new ForbiddenError("You are not authorized to perform this action");
             }
 
-            try {
-                return await models.Merchant.findAll();
-            } catch (error) {
-                throw new Error(error.message)
-            }
+            const model = models.Merchant;
+            const paginatedResult = paginateResults(size, offset, model);
+
+            return paginatedResult;
         },
 
         // Get all information about a merchant

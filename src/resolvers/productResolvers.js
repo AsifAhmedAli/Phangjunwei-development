@@ -1,4 +1,4 @@
-const { paginateResults } = require('../utils');
+const { paginateResults, paginateMerchantProducts } = require('../utils');
 
 module.exports = {
     Query: {
@@ -11,17 +11,17 @@ module.exports = {
             }
         },
 
-        async allProducts(root, { offset, limit }, { models }) {
+        async allProducts(root, { size, offset }, { models }) {
             try {
-                const result = await models.Product.findAll();
-                return result;
+                const paginatedResult = paginateResults(size, offset, models.Product);
+                return paginatedResult;
             } catch (error) {
                 throw new Error(error.message);
             }
         },
 
         // Get all products of a merchant
-        async merchantProducts(root, { merchantId }, { models, user }) {
+        async merchantProducts(root, { merchantId, size, offset }, { models, user }) {
             if (!user) {
                 throw new ForbiddenError("Not authorized");
             }
@@ -35,11 +35,8 @@ module.exports = {
             }
 
             try {
-                const result = await models.Product.findAll({
-                    where: { merchantId: merchantId }
-                });
-
-                return result;
+                const paginatedResults = paginateMerchantProducts(size, offset, models.Product, merchantId);
+                return paginatedResults;
 
             } catch (error) {
                 throw new Error(error.message)
@@ -66,32 +63,6 @@ module.exports = {
             } catch (error) {
                 throw new Error(error.message)
             }
-        },
-
-
-        // Paginated products
-        async searchProductsPaged(root, { pageSize = 20, merchantId, after }, { models }) {
-            const allProducts = await models.Product.findAll({
-                where: { merchantId: merchantId }
-            });
-
-            //Use if needs to be reversed
-            //allProducts.reverse();
-
-            const products = paginateResults({
-                after,
-                pageSize,
-                results: allProducts,
-            });
-
-            return {
-                products,
-                cursor: products.length ? products[products.length - 1].cursor : null,
-                // if the cursor of the end of the paginated results is the same as the
-                // last item in _all_ results, then there are no more results after this
-                hasMore: products.length
-                    ? products[products.length - 1].cursor !== allProducts[allProducts.length - 1].cursor : false,
-            };
         },
 
     },

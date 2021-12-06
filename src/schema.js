@@ -98,22 +98,43 @@ const typeDefs = gql`
     product: Product!
   }
 
+  # Pagination return types
+  type AllMerchants{
+    content: [Merchant]!,
+    totalPages: Int!
+  }
+
+  type AllUsers{
+    content: [User]!,
+    totalPages: Int!
+  }
+
+  type AllOrders{
+    content: [OrderItem]!,
+    totalPages: Int!
+  }
+
+  type AllProducts{
+    content: [Product]!,
+    totalPages: Int!
+  }
+  # Pagination return types END HERE
+
   type Query {
     # Users
-    allUser: [User]
+    allUser(size: Int, offset: Int): AllUsers!
     getUser(id: Int!): User
 
     # Merchants
-    allMerchants: [Merchant!]!
+    allMerchants(size: Int, offset: Int): AllMerchants!
     getMerchant(id: Int!): Merchant
-    merchantProducts(merchantId: Int!): [Product]
+    merchantProducts(merchantId: Int!, size: Int, offset: Int): AllProducts!
     merchantOrders(id: Int!): [OrderItem]
 
     # Products
-    allProducts(offset: Int, limit: Int): [Product]
+    allProducts(size: Int, offset: Int): AllProducts!
     getProduct(id: Int!): Product
     parentProducts(type: String!, merchantId: Int!): [Product]
-    searchProductsPaged(pageSize: Int, merchantId: Int!, after: String): ProductConnection
     
     # Cart
     getCartItems(id: Int!): [Product]
