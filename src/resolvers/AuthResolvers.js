@@ -90,7 +90,7 @@ module.exports = {
     },
 
     // make admin Resolver
-    async makeAdmin(root, { email }, { models, user }) {
+    async makeAdmin(root, { email }, { models, user, }) {
       if (!user) {
         throw new ForbiddenError("Not authorized");
       }
@@ -121,7 +121,7 @@ module.exports = {
     },
 
     // Merchant login Resolver
-    async merchantLogin(root, { email, password }, { models }) {
+    async merchantLogin(root, { email, password }, { models,res }) {
       try {
         const merchant = await models.Merchant.findOne({
           where: { email: email },
@@ -140,18 +140,42 @@ module.exports = {
           throw new Error("Incorrect password");
         }
 
-        const token = jwt.sign(
-          {
+        // const token = jwt.sign(
+        //   {
+            // id: merchant.id,
+            // name: merchant.name,
+            // email: merchant.email,
+            // blocked: merchant.blocked,
+        //   },
+        //   process.env.JWT_SECRET,
+        //   { expiresIn: "1h" }
+        // );
+        const access_token = createAccessToken({
             id: merchant.id,
             name: merchant.name,
             email: merchant.email,
             blocked: merchant.blocked,
-          },
-          process.env.JWT_SECRET,
-          { expiresIn: "1h" }
-        );
+           
+          });
+          const refresh_token = createRefreshToken({
+            id: merchant.id,
+            name: merchant.name,
+            email: merchant.email,
+            blocked: merchant.blocked,
+          });
+          res.cookie("refreshtoken", refresh_token, {
+            // httpOnly: true,
+            path: "/",
+            secure: true,
+            sameSite: "none",
+            maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
+          });
+          console.log(res);
+  
+          return { token: access_token };
 
-        return { token };
+
+        // return { token };
       } catch (error) {
         throw new Error(error.message);
       }
