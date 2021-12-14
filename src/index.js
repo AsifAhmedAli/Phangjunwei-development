@@ -1,8 +1,6 @@
 const { ApolloServer } = require("apollo-server-express");
 const typeDefs = require("./schema");
 const express = require("express");
-const expressJwt = require("express-jwt");
-const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const modelsGraphql = require("../models");
 const _ = require("lodash");
@@ -14,7 +12,6 @@ const productResolvers = require("./resolvers/productResolvers");
 const merchantResolvers = require("./resolvers/merchantResolvers");
 const wishlistResolvers = require("./resolvers/wishlistResolvers");
 const authResolvers = require("./resolvers/authResolvers");
-const { includes } = require("lodash");
 const jwt = require("jsonwebtoken");
 
 (async function () {
@@ -32,27 +29,19 @@ const jwt = require("jsonwebtoken");
       merchantResolvers
     ),
     context: ({ req, res }) => {
-      let user=null
-     
-     
-      try {
+      let user = null;
 
-        if(req.headers["x-access-token"]){
-          // console.log(req.headers["x-access-token"])
-          const token=req.headers["x-access-token"]
-          console.log(token)
-          const data = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
-          console.log(data)
-          // user= data
+      try {
+        // Fetching the user from the request Token
+        if (req.headers["x-access-token"]) {
+          const token = req.headers["x-access-token"]
+          const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+          user = data;
         }
-        
       } catch (error) {
-        
+        return user;
       }
 
-      console.log(user)
-      // if(!token){
-     
       return {
         models: modelsGraphql,
         user,
@@ -69,7 +58,6 @@ const jwt = require("jsonwebtoken");
   app.use(express.json()); // bodyparser
 
   app.use(cookieParser());
- 
 
   app.use((err, req, res, next) => {
     if (err.name === "UnauthorizedError") {

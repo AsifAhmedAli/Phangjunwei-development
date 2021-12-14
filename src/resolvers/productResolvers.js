@@ -1,3 +1,4 @@
+const { ForbiddenError } = require('apollo-server-express');
 const { paginateResults, paginateMerchantProducts } = require('../utils');
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
 
         // Get all products of a merchant
         async merchantProducts(root, { merchantId, size, offset }, { models, user }) {
+
             if (!user) {
                 throw new ForbiddenError("Not authorized");
             }
