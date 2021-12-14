@@ -15,6 +15,7 @@ const merchantResolvers = require("./resolvers/merchantResolvers");
 const wishlistResolvers = require("./resolvers/wishlistResolvers");
 const authResolvers = require("./resolvers/authResolvers");
 const { includes } = require("lodash");
+const jwt = require("jsonwebtoken");
 
 (async function () {
   const server = new ApolloServer({
@@ -31,7 +32,27 @@ const { includes } = require("lodash");
       merchantResolvers
     ),
     context: ({ req, res }) => {
-      const user = req.user || null;
+      let user=null
+     
+     
+      try {
+
+        if(req.headers["x-access-token"]){
+          // console.log(req.headers["x-access-token"])
+          const token=req.headers["x-access-token"]
+          console.log(token)
+          const data = jwt.verify(token,process.env.ACCESS_TOKEN_SECRET);
+          console.log(data)
+          // user= data
+        }
+        
+      } catch (error) {
+        
+      }
+
+      console.log(user)
+      // if(!token){
+     
       return {
         models: modelsGraphql,
         user,
@@ -48,17 +69,7 @@ const { includes } = require("lodash");
   app.use(express.json()); // bodyparser
 
   app.use(cookieParser());
-  // app.use(cors({
-  //   origin: ["https://studio.apollographql.com"],
-  //   credentials: true
-  // }));
-  app.use(
-    expressJwt({
-      secret: process.env.REFRESH_TOKEN_SECRET,
-      algorithms: ["HS256"],
-      credentialsRequired: false,
-    })
-  );
+ 
 
   app.use((err, req, res, next) => {
     if (err.name === "UnauthorizedError") {
