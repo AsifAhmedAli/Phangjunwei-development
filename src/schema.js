@@ -152,6 +152,7 @@ const typeDefs = gql`
     register(name: String!, email: String!, password: String!): User!
     login(email: String!, password: String!): ReturnToken
     makeAdmin(email: String!): User!
+    generateAccessToken: ReturnToken
     merchantLogin(email: String!, password: String!): ReturnToken
     
     # User
