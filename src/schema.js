@@ -17,16 +17,10 @@ const typeDefs = gql`
   type Merchant {
     id: Int!
     name: String!
-    description: String
-    address1: String
-    contact1: String
-    contact2: String
+    address: String
+    contact: String
     email: String!
     password: String!
-    tier: String
-    merchantProductImages: String,
-    merchantMoodshotImages: String,
-    merchantAdImages: String,
     blocked: Boolean
     role: String
     products: [Product!]
@@ -34,18 +28,13 @@ const typeDefs = gql`
 
   type Product {
     id: Int!
-    skuId: String!
     skuName: String!,
     skuTag: String,
     skuCompany: String,
     skuCategory: String,
     skuStyle: String,
     skuColor: String,
-    skuPrice1: Float
-    skuPrice2: Float
-    skuPrice3: Float
-    skuPrice4: Float
-    srpPrice: Float!
+    skuprice: Float
     type: String!
     parentId: Int
     promoPrice: Float
@@ -93,7 +82,6 @@ const typeDefs = gql`
 
   type Wishlist {
     id: Int!,
-    description: String,
     user: User!
     product: Product!
   }
@@ -164,14 +152,8 @@ const typeDefs = gql`
         name: String!, 
         email: String!, 
         password: String!,
-        description: String, 
-        address1: String, 
-        contact1: String, 
-        contact2: String,
-        merchantProductImages: String,
-        merchantMoodshotImages: String,
-        merchantAdImages: String, 
-        tier: String
+        address: String, 
+        contact: String, 
         blocked: Boolean
         role: String
       ): Merchant!
@@ -180,14 +162,8 @@ const typeDefs = gql`
         name: String!, 
         email: String!, 
         password: String!,
-        description: String, 
-        address1: String, 
-        contact1: String, 
-        contact2: String,
-        merchantProductImages: String,
-        merchantMoodshotImages: String,
-        merchantAdImages: String, 
-        tier: String
+        address: String, 
+        contact: String, 
         blocked: Boolean
         role: String
     ): Merchant!
@@ -198,18 +174,13 @@ const typeDefs = gql`
 
     # Product
     createProduct(
-      skuId: String!, 
       skuName: String!,
       skuCompany: String,
       skuCategory: String,
       skuColor: String,
       skuStyle: String,
       skuTag: String, 
-      skuPrice1: Float, 
-      skuPrice2: Float, 
-      skuPrice3: Float, 
-      skuPrice4: Float, 
-      srpPrice: Float!, 
+      skuprice: Float, 
       type: String!
       parentId: Int
       inWishlist: Boolean,
@@ -220,14 +191,9 @@ const typeDefs = gql`
     removeProduct(id: Int!): Int
     updateProduct(
       id: Int!, 
-      skuId: String!, 
       skuName: String!, 
-      skuPrice1: Float, 
-      skuPrice2: Float, 
-      skuPrice3: Float, 
-      skuPrice4: Float, 
+      skuprice: Float, 
       inWishlist: Boolean,
-      srpPrice: Float!, 
       disabled: Boolean,
       promoPrice: Float, 
       stockQty: Int!

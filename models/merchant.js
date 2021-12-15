@@ -12,20 +12,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       Merchant.hasMany(models.Product);
+      Merchant.hasMany(models.MerchantImages);
     }
   };
   Merchant.init({
     name: DataTypes.STRING,
-    description: DataTypes.STRING,
     password: DataTypes.STRING,
-    address1: DataTypes.STRING,
-    contact1: DataTypes.STRING,
-    contact2: DataTypes.STRING,
+    address: DataTypes.STRING,
+    contact: DataTypes.STRING,
     email: DataTypes.STRING,
-    merchantProductImages: DataTypes.STRING,
-    merchantMoodshotImages: DataTypes.STRING,
-    merchantAdImages: DataTypes.STRING,
-    tier: DataTypes.STRING,
     role: DataTypes.STRING,
     blocked: DataTypes.BOOLEAN
   }, {

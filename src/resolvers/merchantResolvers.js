@@ -76,14 +76,8 @@ module.exports = {
                 name,
                 email,
                 password,
-                description,
-                address1,
-                contact1,
-                contact2,
-                merchantProductImages,
-                merchantMoodshotImages,
-                merchantAdImages,
-                tier
+                address,
+                contact,
             }, { models, user }) {
 
             if (!user) {
@@ -105,14 +99,8 @@ module.exports = {
                     name,
                     email,
                     password: await bcrypt.hash(password, 10),
-                    description,
-                    address1,
-                    contact1,
-                    merchantProductImages: "https://www.windowscentral.com/sites/wpcentral.com/files/styles/large/public/field/image/2021/09/lost-in-random-queen-head.jpg",
-                    merchantMoodshotImages: "https://media.nature.com/lw1024/magazine-assets/d41586-019-02093-7/d41586-019-02093-7_16909352.jpg",
-                    merchantAdImages: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZLi3mAXc00qZnI2GkiLJtff1PXpg95h2t8w&usqp=CAU",
-                    contact2,
-                    tier
+                    address,
+                    contact,
                 });
                 return result;
             } catch (error) {
@@ -128,14 +116,8 @@ module.exports = {
                 name,
                 email,
                 password,
-                description,
-                address1,
-                contact1,
-                contact2,
-                merchantProductImages,
-                merchantMoodshotImages,
-                merchantAdImages,
-                tier
+                address,
+                contact,
             }, { models, user }) {
 
             if (!user) {
@@ -157,14 +139,8 @@ module.exports = {
                     name,
                     email,
                     password,
-                    description,
-                    address1,
-                    contact1,
-                    contact2,
-                    merchantProductImages,
-                    merchantMoodshotImages,
-                    merchantAdImages,
-                    tier
+                    address,
+                    contact,
                 }, {
                     where: { id: id }
                 });

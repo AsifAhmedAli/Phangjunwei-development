@@ -72,18 +72,13 @@ module.exports = {
 
         async createProduct(root,
             {
-                skuId,
                 skuName,
                 skuCompany,
                 skuCategory,
                 skuTag,
                 skuStyle,
                 skuColor,
-                skuPrice1,
-                skuPrice2,
-                skuPrice3,
-                skuPrice4,
-                srpPrice,
+                skuprice,
                 type,
                 parentId,
                 promoPrice,
@@ -109,7 +104,6 @@ module.exports = {
 
                 const result = await models.Product.create({
                     merchantId,
-                    skuId,
                     skuName,
                     skuCompany,
                     skuCategory,
@@ -118,11 +112,7 @@ module.exports = {
                     skuColor,
                     type: type.toLowerCase(),
                     parentId: parentId || null,
-                    skuPrice1,
-                    skuPrice2,
-                    skuPrice3,
-                    skuPrice4,
-                    srpPrice,
+                    skuprice,
                     promoPrice,
                     stockQty
                 });
@@ -159,13 +149,8 @@ module.exports = {
 
         async updateProduct(root, {
             id,
-            skuId,
             skuName,
-            skuPrice1,
-            skuPrice2,
-            skuPrice3,
-            skuPrice4,
-            srpPrice,
+            skuprice,
             promoPrice,
             disabled,
             stockQty
@@ -183,13 +168,8 @@ module.exports = {
 
                 if (result) {
                     result.update({
-                        skuId,
                         skuName,
-                        skuPrice1,
-                        skuPrice2,
-                        skuPrice3,
-                        skuPrice4,
-                        srpPrice,
+                        skuprice,
                         disabled,
                         promoPrice,
                         stockQty

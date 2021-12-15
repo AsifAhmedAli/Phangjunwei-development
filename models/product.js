@@ -14,23 +14,19 @@ module.exports = (sequelize, DataTypes) => {
       Product.belongsTo(models.Merchant, { foreignKey: 'merchantId' });
       Product.belongsToMany(models.Cart, { through: models.CartItem });
       Product.belongsToMany(models.Order, { through: models.OrderItem });
+      Product.hasMany(models.ProductImages, { foreignKey: 'productId' });
     }
   };
   Product.init({
-    skuId: DataTypes.STRING,
     skuName: DataTypes.STRING,
     skuTag: DataTypes.STRING,
     skuCategory: DataTypes.STRING,
     skuStyle: DataTypes.STRING,
     skuCompany: DataTypes.STRING,
     skuColor: DataTypes.STRING,
-    skuPrice1: DataTypes.FLOAT,
+    skuPrice: DataTypes.FLOAT,
     type: DataTypes.STRING,
     parentId: DataTypes.INTEGER,
-    skuPrice2: DataTypes.FLOAT,
-    skuPrice3: DataTypes.FLOAT,
-    skuPrice4: DataTypes.FLOAT,
-    srpPrice: DataTypes.FLOAT,
     disabled: DataTypes.BOOLEAN,
     inWishlist: DataTypes.BOOLEAN,
     promoPrice: DataTypes.FLOAT,

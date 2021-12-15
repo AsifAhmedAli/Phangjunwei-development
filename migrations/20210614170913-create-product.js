@@ -8,10 +8,6 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      skuId: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       skuName: {
         allowNull: false,
         type: Sequelize.STRING
@@ -31,20 +27,7 @@ module.exports = {
       skuStyle: {
         type: Sequelize.STRING
       },
-      skuPrice1: {
-        type: Sequelize.FLOAT
-      },
-      skuPrice2: {
-        type: Sequelize.FLOAT
-      },
-      skuPrice3: {
-        type: Sequelize.FLOAT
-      },
-      skuPrice4: {
-        type: Sequelize.FLOAT
-      },
-      srpPrice: {
-        allowNull: false,
+      skuPrice: {
         type: Sequelize.FLOAT
       },
       promoPrice: {

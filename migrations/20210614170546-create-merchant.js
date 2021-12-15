@@ -12,16 +12,10 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      description: {
+      address: {
         type: Sequelize.STRING
       },
-      address1: {
-        type: Sequelize.STRING
-      },
-      contact1: {
-        type: Sequelize.STRING
-      },
-      contact2: {
+      contact: {
         type: Sequelize.STRING
       },
       email: {
@@ -30,9 +24,6 @@ module.exports = {
       },
       password: {
         allowNull: false,
-        type: Sequelize.STRING
-      },
-      tier: {
         type: Sequelize.STRING
       },
       createdAt: {
