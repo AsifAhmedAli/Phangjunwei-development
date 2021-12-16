@@ -76,6 +76,7 @@ const jwt = require("jsonwebtoken");
 
   app.use("/api/payment", require("./routes/payment"));
   app.use('/api/merchant/create', upload.array("mImage"), require('./routes/merchant'));
+  app.use('/api/product/create', upload.array("mImage"), require('./routes/product'));
 
   app.listen(4000, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
