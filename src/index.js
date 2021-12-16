@@ -7,6 +7,7 @@ const _ = require("lodash");
 const multer = require("multer");
 const upload = multer({ dest: "uploads/" });
 require("dotenv").config();
+const tokenCheck = require("./middlewares/tokenCheck");
 const userResolvers = require("./resolvers/userResolvers");
 const cartResolvers = require("./resolvers/cartResolvers");
 const orderResolvers = require("./resolvers/orderResolvers");
@@ -75,8 +76,8 @@ const jwt = require("jsonwebtoken");
   });
 
   app.use("/api/payment", require("./routes/payment"));
-  app.use('/api/merchant/create', upload.array("mImage"), require('./routes/merchant'));
-  app.use('/api/product/create', upload.array("mImage"), require('./routes/product'));
+  app.use('/api/merchant/create', tokenCheck, upload.array("mImage"), require('./routes/merchant'));
+  app.use('/api/product/create', tokenCheck, upload.array("mImage"), require('./routes/product'));
 
   app.listen(4000, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)

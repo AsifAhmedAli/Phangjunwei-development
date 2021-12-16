@@ -6,6 +6,12 @@ const fs = require("fs");
 const { Merchant, MerchantImages } = db;
 
 router.post('/', async (req, res) => {
+    if (!req.user && req.user.role !== 'Admin' && req.user.role !== 'Superadmin') {
+        return res.status(401).json({
+            message: "Unauthorized"
+        });
+    }
+
     if (!req.files || req.files.length === 0) {
         return res.status(400).json({ error: "No file uploaded" })
     }

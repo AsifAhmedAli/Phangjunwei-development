@@ -67,63 +67,75 @@ module.exports = {
             }
         },
 
-    },
-    Mutation: {
-
-        async createProduct(root,
-            {
-                skuName,
-                skuCompany,
-                skuCategory,
-                skuTag,
-                skuStyle,
-                skuColor,
-                skuprice,
-                type,
-                parentId,
-                promoPrice,
-                stockQty,
-                merchantId
-            }, { models, user }) {
-
-            if (!user) {
+        async productImages(root, { id }, { models, user }) {
+            if (!user || user.role !== 'Admin' && user.role !== 'Superadmin' && user.role !== 'Merchant') {
                 throw new ForbiddenError("Not authorized");
             }
-
-            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
-                throw new Error('Not authorized');
-            }
-
             try {
-                // Check if merchant exists;
-                const merchant = await models.Merchant.findByPk(merchantId);
-
-                if (!merchant) {
-                    throw new Error('Merchant does not exist, Please register the Merchant first');
-                }
-
-                const result = await models.Product.create({
-                    merchantId,
-                    skuName,
-                    skuCompany,
-                    skuCategory,
-                    skuStyle,
-                    skuTag,
-                    skuColor,
-                    type: type.toLowerCase(),
-                    parentId: parentId || null,
-                    skuprice,
-                    promoPrice,
-                    stockQty
-                });
-
+                const result = await models.ProductImages.findAll({ where: { ProductId: id } });
                 return result;
-
             } catch (error) {
                 throw new Error(error.message);
             }
+        }
 
-        },
+    },
+    Mutation: {
+
+        // async createProduct(root,
+        //     {
+        //         skuName,
+        //         skuCompany,
+        //         skuCategory,
+        //         skuTag,
+        //         skuStyle,
+        //         skuColor,
+        //         skuprice,
+        //         type,
+        //         parentId,
+        //         promoPrice,
+        //         stockQty,
+        //         merchantId
+        //     }, { models, user }) {
+
+        //     if (!user) {
+        //         throw new ForbiddenError("Not authorized");
+        //     }
+
+        //     if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+        //         throw new Error('Not authorized');
+        //     }
+
+        //     try {
+        //         // Check if merchant exists;
+        //         const merchant = await models.Merchant.findByPk(merchantId);
+
+        //         if (!merchant) {
+        //             throw new Error('Merchant does not exist, Please register the Merchant first');
+        //         }
+
+        //         const result = await models.Product.create({
+        //             merchantId,
+        //             skuName,
+        //             skuCompany,
+        //             skuCategory,
+        //             skuStyle,
+        //             skuTag,
+        //             skuColor,
+        //             type: type.toLowerCase(),
+        //             parentId: parentId || null,
+        //             skuprice,
+        //             promoPrice,
+        //             stockQty
+        //         });
+
+        //         return result;
+
+        //     } catch (error) {
+        //         throw new Error(error.message);
+        //     }
+
+        // },
 
         async removeProduct(root, { id }, { models, user }) {
             if (!user) {

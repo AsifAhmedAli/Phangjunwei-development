@@ -68,46 +68,72 @@ module.exports = {
             }
         },
 
-    },
-    Mutation: {
-        // Create new merchant
-        async createMerchant(root,
-            {
-                name,
-                email,
-                password,
-                address,
-                contact,
-            }, { models, user }) {
-
+        async merchantImages(root, { id }, { models, user }) {
             if (!user) {
                 throw new Error('Invalid Request')
             }
+
             if (user.role !== "Admin" && user.role !== "Superadmin") {
                 throw new ForbiddenError("You are not authorized to perform this action");
             }
 
             try {
-                // Check if email exists
-                const userExists = await models.Merchant.findOne({ where: { email: email } });
+                const result = await models.MerchantImages.findAll({ where: { MerchantId: id } });
 
-                if (userExists) {
-                    throw new Error("Email already exists");
+                if (!result) {
+                    throw new Error('Merchant Image not found');
                 }
 
-                const result = await models.Merchant.create({
-                    name,
-                    email,
-                    password: await bcrypt.hash(password, 10),
-                    address,
-                    contact,
-                });
+                if (result.length === 0) {
+                    throw new Error('No Merchant Images found');
+                }
+
                 return result;
             } catch (error) {
-                throw new Error(error.message)
+                throw new Error(error.message);
             }
+        }
 
-        },
+    },
+    Mutation: {
+        // Create new merchant
+        // async createMerchant(root,
+        //     {
+        //         name,
+        //         email,
+        //         password,
+        //         address,
+        //         contact,
+        //     }, { models, user }) {
+
+        //     if (!user) {
+        //         throw new Error('Invalid Request')
+        //     }
+        //     if (user.role !== "Admin" && user.role !== "Superadmin") {
+        //         throw new ForbiddenError("You are not authorized to perform this action");
+        //     }
+
+        //     try {
+        //         // Check if email exists
+        //         const userExists = await models.Merchant.findOne({ where: { email: email } });
+
+        //         if (userExists) {
+        //             throw new Error("Email already exists");
+        //         }
+
+        //         const result = await models.Merchant.create({
+        //             name,
+        //             email,
+        //             password: await bcrypt.hash(password, 10),
+        //             address,
+        //             contact,
+        //         });
+        //         return result;
+        //     } catch (error) {
+        //         throw new Error(error.message)
+        //     }
+
+        // },
 
         // update merchant
         async updateMerchant(root,
@@ -194,16 +220,13 @@ module.exports = {
             } catch (error) {
                 throw new Error(error.message)
             }
-        }
+        },
 
     },
     Merchant: {
         async products(merchant) {
             return merchant.getProducts();
         },
-        // async user(merchant) {
-        //     return merchant.getUser();
-        // },
     },
 
 };

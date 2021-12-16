@@ -92,6 +92,10 @@ const typeDefs = gql`
     bannerImg: String
   }
 
+  type ProductImages {
+    mainImage: String
+  }
+
   # Pagination return types
   type AllMerchants{
     content: [Merchant]!
@@ -124,11 +128,13 @@ const typeDefs = gql`
     getMerchant(id: Int!): Merchant
     merchantProducts(merchantId: Int!, size: Int, offset: Int): AllProducts!
     merchantOrders(id: Int!): [OrderItem]
+    merchantImages(id: Int!): [MerchantImages]
 
     # Products
     allProducts(size: Int, offset: Int): AllProducts!
     getProduct(id: Int!): Product
     parentProducts(type: String!, merchantId: Int!): [Product]
+    productImages(id: Int!): [ProductImages]
     
     # Cart
     getCartItems(id: Int!): [Product]
