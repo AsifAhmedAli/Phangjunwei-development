@@ -24,6 +24,7 @@ const typeDefs = gql`
     blocked: Boolean
     role: String
     products: [Product!]
+    merchantImages: [MerchantImages!]
   }
 
   type Product {
@@ -60,50 +61,55 @@ const typeDefs = gql`
   }
 
   type OrderItem {
-    OrderId: Int!,
-    ProductId: Int!,
-    MerchantId: Int!,
-    clientFirstName: String,
-    clientLastName: String,
-    clientEmail: String,
-    clientContactInfo: String,
-    refCode: Int,
-    deliveryOption: Int,
-    deliveryFee: Int,
-    subTotal: Int!,
-    promoCode: Int,
-    promoCodeValue: Int,
-    deliveryAddress: String,
-    billingAddress: String,
-    paymentStatus: String,
-    paymentInfo: String,
-    status: String,
+    OrderId: Int!
+    ProductId: Int!
+    MerchantId: Int!
+    clientFirstName: String
+    clientLastName: String
+    clientEmail: String
+    clientContactInfo: String
+    refCode: Int
+    deliveryOption: Int
+    deliveryFee: Int
+    subTotal: Int!
+    promoCode: Int
+    promoCodeValue: Int
+    deliveryAddress: String
+    billingAddress: String
+    paymentStatus: String
+    paymentInfo: String
+    status: String
   }
 
   type Wishlist {
-    id: Int!,
+    id: Int!
     user: User!
     product: Product!
   }
 
+  type MerchantImages {
+    collectionImg: String
+    bannerImg: String
+  }
+
   # Pagination return types
   type AllMerchants{
-    content: [Merchant]!,
+    content: [Merchant]!
     totalPages: Int!
   }
 
   type AllUsers{
-    content: [User]!,
+    content: [User]!
     totalPages: Int!
   }
 
   type AllOrders{
-    content: [OrderItem]!,
+    content: [OrderItem]!
     totalPages: Int!
   }
 
   type AllProducts{
-    content: [Product]!,
+    content: [Product]!
     totalPages: Int!
   }
   # Pagination return types END HERE

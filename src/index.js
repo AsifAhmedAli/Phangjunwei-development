@@ -4,6 +4,8 @@ const express = require("express");
 const cookieParser = require("cookie-parser");
 const modelsGraphql = require("../models");
 const _ = require("lodash");
+const multer = require("multer");
+const upload = multer({ dest: "uploads/" });
 require("dotenv").config();
 const userResolvers = require("./resolvers/userResolvers");
 const cartResolvers = require("./resolvers/cartResolvers");
@@ -73,6 +75,7 @@ const jwt = require("jsonwebtoken");
   });
 
   app.use("/api/payment", require("./routes/payment"));
+  app.use('/api/merchant/create', upload.array("mImage"), require('./routes/merchant'));
 
   app.listen(4000, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
