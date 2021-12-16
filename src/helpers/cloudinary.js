@@ -6,9 +6,9 @@ const deleteFile = util.promisify(fs.unlink);
 
 function upload(file) {
     cloudinary.config({
-        cloud_name: "burrowspteltd",
-        api_key: "262168993796952",
-        api_secret: "4woYhBPmOVjqyHgd-clbQJ6X_D0"
+        cloud_name: `${process.env.CLOUDINARY_NAME}`,
+        api_key: `${process.env.CLOUDINARY_KEY}`,
+        api_secret: `${process.env.CLOUDINARY_SECRET}`
     });
 
     return new Q.Promise((resolve, reject) => {
