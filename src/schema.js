@@ -160,15 +160,15 @@ const typeDefs = gql`
     removeUser(id: Int!): Int
     
     # Merchant
-    createMerchant(
-        name: String!, 
-        email: String!, 
-        password: String!,
-        address: String, 
-        contact: String, 
-        blocked: Boolean
-        role: String
-      ): Merchant!
+    # createMerchant(
+    #     name: String!, 
+    #     email: String!, 
+    #     password: String!,
+    #     address: String, 
+    #     contact: String, 
+    #     blocked: Boolean
+    #     role: String
+    #   ): Merchant!
 
     updateMerchant(
         name: String!, 
@@ -185,21 +185,21 @@ const typeDefs = gql`
     unblockMerchant(id: Int!): Merchant!
 
     # Product
-    createProduct(
-      skuName: String!,
-      skuCompany: String,
-      skuCategory: String,
-      skuColor: String,
-      skuStyle: String,
-      skuTag: String, 
-      skuprice: Float, 
-      type: String!
-      parentId: Int
-      inWishlist: Boolean,
-      promoPrice: Float, 
-      stockQty: Int!, 
-      merchantId: Int!
-    ): Product!
+    # createProduct(
+    #   skuName: String!,
+    #   skuCompany: String,
+    #   skuCategory: String,
+    #   skuColor: String,
+    #   skuStyle: String,
+    #   skuTag: String, 
+    #   skuprice: Float, 
+    #   type: String!
+    #   parentId: Int
+    #   inWishlist: Boolean,
+    #   promoPrice: Float, 
+    #   stockQty: Int!, 
+    #   merchantId: Int!
+    # ): Product!
     removeProduct(id: Int!): Int
     updateProduct(
       id: Int!, 
