@@ -33,15 +33,19 @@ const jwt = require("jsonwebtoken");
     ),
     context: ({ req, res }) => {
       let user = null;
+      console.log(req.headers)
 
       try {
         // Fetching the user from the request Token
-        if (req.headers["x-access-token"]) {
-          const token = req.headers["x-access-token"]
+        if (req.headers["authorization"]) {
+          const token = req.headers["authorization"]
           const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
           user = data;
+          // console.log("I am access token"+token)
+          console.log("hi")
         }
       } catch (error) {
+        
         return user;
       }
 
@@ -72,7 +76,7 @@ const jwt = require("jsonwebtoken");
   await server.start();
   server.applyMiddleware({
     app,
-    cors: { origin: "https://studio.apollographql.com", credentials: true },
+    cors: { origin: ["https://studio.apollographql.com", "http://localhost:3000"], credentials: true },
   });
 
   app.use("/api/payment", require("./routes/payment"));
