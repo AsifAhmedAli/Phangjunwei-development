@@ -33,7 +33,7 @@ const jwt = require("jsonwebtoken");
     ),
     context: ({ req, res }) => {
       let user = null;
-      console.log(req.headers)
+      // console.log(req.headers)
 
       try {
         // Fetching the user from the request Token
@@ -42,7 +42,7 @@ const jwt = require("jsonwebtoken");
           const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
           user = data;
           // console.log("I am access token"+token)
-          console.log("hi")
+          // console.log("hi")
         }
       } catch (error) {
         
