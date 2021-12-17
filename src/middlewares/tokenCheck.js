@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const tokenCheck = (req, res, next) => {
-    const token = req.headers['x-access-token'];
+    const token = req.headers['authorization'];
     if (!token) {
         return res.status(401).json({ message: "Token not found, login again" });
     }

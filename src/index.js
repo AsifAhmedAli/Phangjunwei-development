@@ -33,7 +33,6 @@ const jwt = require("jsonwebtoken");
     ),
     context: ({ req, res }) => {
       let user = null;
-      console.log(req.headers)
 
       try {
         // Fetching the user from the request Token
@@ -45,7 +44,7 @@ const jwt = require("jsonwebtoken");
           console.log("hi")
         }
       } catch (error) {
-        
+
         return user;
       }
 
