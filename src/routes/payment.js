@@ -77,25 +77,29 @@ router.post('/create', async (req, res) => {
     Conversion into Base64 encoded string:
       Base64(" <MID>:<PSK> ")
 
-    Authorization Header:
+    Authorization Header format:
       Authorization: "Basic Base64EncodedString"
   
   */
 
-  const MID = "122000000000198";
+  if (!req.body.amount) {
+    return res.status(400).json({ error: "Amount is required" });
+  }
+
+  const MID = `${process.env.FOMOPAY_MID}`;
   // Create Base64 String
-  const buf = Buffer.from(`${MID}:7BBDD68340CDAA66FAFD2D1F94421713EDE5C1C8DCD28AA51D7C95A2C4669C39`, 'utf8');
+  const buf = Buffer.from(`${MID}:${process.env.FOMOPAY_SK}`, 'utf8');
   const base64String = buf.toString('base64');
 
   const params = {
     mode: 'HOSTED',
     orderNo: v4(),
-    subject: req.body.subject || "Testing my ecommerce payment",
-    amount: req.body.amount || "1.00",
+    subject: req.body.subject || "Product payment",
+    amount: req.body.amount,
     currencyCode: "SGD",
     notifyUrl: "https://www.google.com",
     returnUrl: "http://localhost:4000/api/payment/done",
-    backUrl: "https://www.yahoo.com",
+    backUrl: `${process.env.BASE_URL}`,
   }
 
   const { data } = await axios.put('https://ipg.fomopay.net/api/orders',
@@ -106,8 +110,8 @@ router.post('/create', async (req, res) => {
         'Content-Type': 'application/json',
       }
     })
+
   res.send(data);
-  // res.send(data);
 });
 
 module.exports = router;
