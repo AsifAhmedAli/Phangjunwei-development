@@ -28,8 +28,7 @@ module.exports = {
     },
 
     // Login Resolver
-    async login(root, { email, password }, { models,req, res }) {
-      // console.log(req.headers["authorization"])
+    async login(root, { email, password }, { models, req, res }) {
       try {
         const user = await models.User.findOne({ where: { email: email } });
 

@@ -41,7 +41,7 @@ const jwt = require("jsonwebtoken");
           const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
           user = data;
           // console.log("I am access token"+token)
-          console.log("hi")
+          // console.log("hi")
         }
       } catch (error) {
 
