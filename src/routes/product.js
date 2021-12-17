@@ -30,8 +30,8 @@ router.post('/', async (req, res) => {
         for (const file of files) {
             const { path } = file;
             const newPath = await multiple(path);
-            urls.push(newPath);
             fs.unlinkSync(path);
+            urls.push(newPath);
         }
 
         // Create merchant and save to database
