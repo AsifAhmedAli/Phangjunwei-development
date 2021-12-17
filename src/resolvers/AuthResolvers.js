@@ -157,7 +157,9 @@ module.exports = {
     // generate Access Token resolver from refresh token
     async generateAccessToken(root, _, { req, res, models }) {
       let tokens = "";
+      
       const tokeni = req.headers["authorization"]
+      console.log(tokeni)
 
       try {
         const rf_token = req.cookies.refreshtoken;

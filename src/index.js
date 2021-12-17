@@ -35,6 +35,7 @@ const jwt = require("jsonwebtoken");
       let user = null;
       try {
         // Fetching the user from the request Token
+        // console.log(req.headers)
         if (req.headers["authorization"]) {
           const token = req.headers["authorization"]
           const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
