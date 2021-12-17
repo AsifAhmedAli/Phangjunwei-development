@@ -33,7 +33,6 @@ const jwt = require("jsonwebtoken");
     ),
     context: ({ req, res }) => {
       let user = null;
-
       try {
         // Fetching the user from the request Token
         if (req.headers["authorization"]) {
@@ -43,7 +42,13 @@ const jwt = require("jsonwebtoken");
         }
       } catch (error) {
 
-        return user;
+        return {
+
+          models: modelsGraphql,
+          user,
+          req,
+          res,
+        }
       }
 
       return {
