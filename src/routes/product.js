@@ -43,7 +43,7 @@ router.post('/', async (req, res) => {
             skuStyle: req.body.skuStyle || null,
             skuColor: req.body.skuColor || null,
             skuprice: req.body.skuprice || null,
-            type: req.body.type,
+            type: req.body.parentId ? 'child' : 'parent',
             parentId: req.body.parentId || null,
             promoPrice: req.body.promoPrice,
             stockQty: req.body.stockQty,
@@ -68,5 +68,6 @@ router.post('/', async (req, res) => {
         throw new Error(e);
     }
 })
+
 
 module.exports = router;
