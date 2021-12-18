@@ -27,15 +27,12 @@ router.post('/', async (req, res) => {
     try {
         let urls = [];
         let multiple = async (path) => await upload(path);
+
         for (const file of files) {
             const { path } = file;
-            console.log("path", file);
             const newPath = await multiple(path);
             urls.push(newPath);
             fs.unlinkSync(path);
-        }
-        if (urls) {
-            console.log(urls);
         }
 
         // Create merchant and save to database

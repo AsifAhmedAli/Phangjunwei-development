@@ -156,14 +156,11 @@ module.exports = {
 
     // generate Access Token resolver from refresh token
     async generateAccessToken(root, _, { req, res, models }) {
-      let tokens = "";
-      
       const tokeni = req.headers["authorization"]
-      console.log(tokeni)
 
       try {
         const rf_token = req.cookies.refreshtoken;
-        
+
         if (!rf_token) {
           throw new Error("Please Login Now");
         }
@@ -177,7 +174,7 @@ module.exports = {
           throw new Error("This doesnt exits");
         }
 
-        jwt.verify(tokeni, process.env.ACCESS_TOKEN, function(err, decoded) {
+        jwt.verify(tokeni, process.env.ACCESS_TOKEN, function (err, decoded) {
           if (err) {
             const access_token = createAccessToken({
               id: result.id,
@@ -185,7 +182,7 @@ module.exports = {
               role: result.role,
               email: result.email,
             });
-    
+
             return {
               token: access_token
             }
@@ -194,9 +191,6 @@ module.exports = {
         return {
           token: tokeni
         }
-        
-
-       
 
       } catch (error) {
         throw new Error(error.message);
