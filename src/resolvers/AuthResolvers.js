@@ -176,24 +176,40 @@ module.exports = {
         if (!user) {
           throw new Error("This doesnt exits");
         }
+        if(tokeni){
 
-        jwt.verify(tokeni, process.env.ACCESS_TOKEN, function(err, decoded) {
-          if (err) {
-            const access_token = createAccessToken({
-              id: result.id,
-              username: result.name,
-              role: result.role,
-              email: result.email,
-            });
-    
-            return {
-              token: access_token
+          jwt.verify(tokeni, process.env.ACCESS_TOKEN, function(err, decoded) {
+            if (err) {
+              const access_token = createAccessToken({
+                id: result.id,
+                username: result.name,
+                role: result.role,
+                email: result.email,
+              });
+      
+              return {
+                token: access_token
+              }
             }
+          });
+          return {
+            token: tokeni
           }
-        });
-        return {
-          token: tokeni
         }
+        else{
+          const access_token = createAccessToken({
+            id: result.id,
+            username: result.name,
+            role: result.role,
+            email: result.email,
+          });
+  
+          return {
+            token: access_token
+          }
+        }
+
+       
         
 
        
