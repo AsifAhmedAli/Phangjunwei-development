@@ -69,7 +69,11 @@ module.exports = {
           maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
         });
 
-        return { token: access_token };
+        return {
+          token: access_token,
+          email: user.email,
+          role: user.role,
+        };
       } catch (error) {
         throw new Error(error.message);
       }
@@ -147,7 +151,11 @@ module.exports = {
           maxAge: 30 * 24 * 60 * 60 * 1000, // 30days
         });
 
-        return { token: access_token };
+        return {
+          token: access_token,
+          email: merchant.email,
+          role: merchant.role,
+        };
 
       } catch (error) {
         throw new Error(error.message);
@@ -173,9 +181,9 @@ module.exports = {
         if (!user) {
           throw new Error("This doesnt exits");
         }
-        if(tokeni){
+        if (tokeni) {
 
-          jwt.verify(tokeni, process.env.ACCESS_TOKEN, function(err, decoded) {
+          jwt.verify(tokeni, process.env.ACCESS_TOKEN, function (err, decoded) {
             if (err) {
               const access_token = createAccessToken({
                 id: result.id,
@@ -183,9 +191,11 @@ module.exports = {
                 role: result.role,
                 email: result.email,
               });
-      
+
               return {
-                token: access_token
+                token: access_token,
+                email: result.email,
+                role: result.role,
               }
             }
           });
@@ -193,28 +203,24 @@ module.exports = {
             token: tokeni
           }
         }
-        else{
+        else {
           const access_token = createAccessToken({
             id: result.id,
             username: result.name,
             role: result.role,
             email: result.email,
           });
-  
+
           return {
-            token: access_token
+            token: access_token,
+            email: result.email,
+            role: result.role,
           }
         }
-
-       
-        
-
-       
 
       } catch (error) {
         throw new Error(error.message);
       }
-
     },
   },
 };

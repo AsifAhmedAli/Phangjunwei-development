@@ -253,6 +253,8 @@ const typeDefs = gql`
 
   type ReturnToken{
     token: String!
+    email: String!
+    role: String!
   }
 
   type UserAuthentication {
