@@ -200,7 +200,9 @@ module.exports = {
             }
           });
           return {
-            token: tokeni
+            token: tokeni,
+            email: result.email,
+            role: result.role,
           }
         }
         else {
