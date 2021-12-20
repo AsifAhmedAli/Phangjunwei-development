@@ -3,6 +3,7 @@ const db = require("../../models");
 const { upload } = require("../helpers/cloudinary");
 const router = express.Router();
 const fs = require("fs");
+const bcrypt = require("bcryptjs");
 const { Merchant, MerchantImages } = db;
 
 router.post('/', async (req, res) => {
@@ -39,7 +40,7 @@ router.post('/', async (req, res) => {
         const merchant = await Merchant.create({
             name: req.body.name,
             email: req.body.email,
-            password: req.body.password,
+            password: bcrypt.hashSync(req.body.password, 10),
             address: req.body.address,
             contact: req.body.contact,
         })
