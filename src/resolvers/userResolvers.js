@@ -95,7 +95,9 @@ module.exports = {
                     where: { id: id }
                 });
 
-                return result;
+                return {
+                    message: 'User deleted successfully'
+                };
             } catch (error) {
                 throw new Error(error.message);
             }

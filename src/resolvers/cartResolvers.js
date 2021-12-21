@@ -126,7 +126,9 @@ module.exports = {
                     throw new Error("invalid input");
                 }
 
-                return result;
+                return {
+                    message: "Cart cleared"
+                };
             } catch (error) {
                 throw new Error(error.message);
             }
@@ -143,7 +145,9 @@ module.exports = {
                     throw new Error("Invalid input");
                 }
 
-                return result;
+                return {
+                    message: "Product removed from cart"
+                };
             } catch (error) {
                 throw new Error(error.message);
             }

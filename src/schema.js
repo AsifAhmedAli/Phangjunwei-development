@@ -158,19 +158,9 @@ const typeDefs = gql`
     
     # User
     updateUser(name: String!, email: String!, password: String!): User!
-    removeUser(id: Int!): Int
-    
-    # Merchant
-    # createMerchant(
-    #     name: String!, 
-    #     email: String!, 
-    #     password: String!,
-    #     address: String, 
-    #     contact: String, 
-    #     blocked: Boolean
-    #     role: String
-    #   ): Merchant!
+    removeUser(id: Int!): Message!
 
+    # Merchant
     updateMerchant(
         name: String!, 
         email: String!, 
@@ -181,27 +171,11 @@ const typeDefs = gql`
         role: String
     ): Merchant!
 
-    removeMerchant(id: Int!): Int
+    removeMerchant(id: Int!): Message!
     blockMerchant(id: Int!): Merchant!
     unblockMerchant(id: Int!): Merchant!
 
-    # Product
-    # createProduct(
-    #   skuName: String!,
-    #   skuCompany: String,
-    #   skuCategory: String,
-    #   skuColor: String,
-    #   skuStyle: String,
-    #   skuTag: String, 
-    #   skuprice: Float, 
-    #   type: String!
-    #   parentId: Int
-    #   inWishlist: Boolean,
-    #   promoPrice: Float, 
-    #   stockQty: Int!, 
-    #   merchantId: Int!
-    # ): Product!
-    removeProduct(id: Int!): Int
+    removeProduct(id: Int!): Message!
     updateProduct(
       id: Int!, 
       skuName: String!, 
@@ -235,15 +209,13 @@ const typeDefs = gql`
     deleteOrder(id: Int!): Message!
     
     #Cart
-    clearCart(id: Int!): Int
+    clearCart(id: Int!): Message!
     addToCart(productId: Int!): Message!
-    removeFromCart(id: Int!, productId: Int!): CartItem!
+    removeFromCart(id: Int!, productId: Int!): Message!
 
-    #Profile
+    #Wishlist
     addToWishlist(userId: Int!, productId: Int!): User!
     removeFromWishlist(userId: Int!, id: Int!): Int
-    saveCartInformation(userId: Int!, clientFirstName: String, clientLastName: String,
-                          clientEmail: String, clientContactInfo: String, deliveryOption: String, deliveryFee: Float, paymentInfo: String): Cart!
   }
 
   type ProductConnection {

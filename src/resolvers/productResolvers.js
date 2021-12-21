@@ -151,7 +151,9 @@ module.exports = {
                     where: { id: id }
                 });
 
-                return result;
+                return {
+                    message: 'Product deleted successfully'
+                };
 
             } catch (error) {
                 throw new Error(error.message);

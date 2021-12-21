@@ -196,7 +196,9 @@ module.exports = {
                     where: { id: id }
                 });
 
-                return result;
+                return {
+                    message: "Merchant deleted successfully"
+                };
             } catch (error) {
                 throw new Error(error.message)
             }
