@@ -22,7 +22,7 @@ module.exports = (sequelize, DataTypes) => {
     contact: DataTypes.STRING,
     email: DataTypes.STRING,
     role: DataTypes.STRING,
-    blocked: DataTypes.BOOLEAN
+    blocked: DataTypes.BOOLEAN,
   }, {
     sequelize,
     modelName: 'Merchant',

@@ -154,6 +154,7 @@ const typeDefs = gql`
     makeAdmin(email: String!): User!
     generateAccessToken: ReturnToken
     merchantLogin(email: String!, password: String!): ReturnToken
+    logout: Message!
     
     # User
     updateUser(name: String!, email: String!, password: String!): User!

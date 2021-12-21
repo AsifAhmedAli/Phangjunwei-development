@@ -162,6 +162,14 @@ module.exports = {
       }
     },
 
+    // logout Resolver
+    async logout(root, args, { res }) {
+      res.clearCookie("refreshtoken");
+      return {
+        message: "Logged out successfully",
+      };
+    },
+
     // generate Access Token resolver from refresh token
     async generateAccessToken(root, _, { req, res, models }) {
       const tokeni = req.headers["authorization"]

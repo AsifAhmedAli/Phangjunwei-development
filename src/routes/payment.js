@@ -99,7 +99,7 @@ router.post('/create', async (req, res) => {
     currencyCode: "SGD",
     notifyUrl: "https://www.google.com",
     returnUrl: "http://localhost:4000/api/payment/done",
-    backUrl: `${process.env.BASE_URL}`,
+    backUrl: "http://localhost:4000/api/payment/cancel",
   }
 
   const { data } = await axios.put('https://ipg.fomopay.net/api/orders',
@@ -111,7 +111,13 @@ router.post('/create', async (req, res) => {
       }
     })
 
-  res.send(data);
+  res.status(200).json(data);
 });
+
+router.get('/cancel', (req, res) => {
+  res.status(300).json({
+    message: 'Payment Cancelled'
+  });
+})
 
 module.exports = router;
