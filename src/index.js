@@ -16,10 +16,10 @@ const merchantResolvers = require("./resolvers/merchantResolvers");
 const wishlistResolvers = require("./resolvers/wishlistResolvers");
 const authResolvers = require("./resolvers/authResolvers");
 const jwt = require("jsonwebtoken");
-const cors = require( 'cors' );
+const cors = require('cors');
 
 (async function () {
-  const corsOption={ origin: ["https://studio.apollographql.com", "http://localhost:3000"], credentials: true }
+  const corsOption = { origin: ["https://studio.apollographql.com", "http://localhost:3000"], credentials: true }
   const server = new ApolloServer({
     // cors: true,
     cors: true,
@@ -37,16 +37,13 @@ const cors = require( 'cors' );
       let user = null;
       try {
         // Fetching the user from the request Token
-        // console.log(req.headers)
         if (req.headers["authorization"]) {
           const token = req.headers["authorization"]
           const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
           user = data;
         }
       } catch (error) {
-
         return {
-
           models: modelsGraphql,
           user,
           req,
@@ -81,12 +78,12 @@ const cors = require( 'cors' );
   await server.start();
   server.applyMiddleware({
     app,
-    cors:corsOption,
+    cors: corsOption,
   });
 
-  app.use("/api/payment", cors(corsOption),require("./routes/payment"));
-  app.use('/api/merchant/create', cors(corsOption),tokenCheck, upload.array("mImage"), require('./routes/merchant'));
-  app.use('/api/product/create', cors(corsOption),tokenCheck, upload.array("mImage"), require('./routes/product'));
+  app.use("/api/payment", cors(corsOption), require("./routes/payment"));
+  app.use('/api/merchant/create', cors(corsOption), tokenCheck, upload.array("mImage"), require('./routes/merchant'));
+  app.use('/api/product/create', cors(corsOption), tokenCheck, upload.array("mImage"), require('./routes/product'));
 
   app.listen(4000, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
