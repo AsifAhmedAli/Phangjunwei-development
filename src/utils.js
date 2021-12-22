@@ -1,8 +1,8 @@
 module.exports = {
     paginateResults: async (size, offset, model) => {
-        let totalCount = 6, pageNumber = 0;
+        let totalCount = 10, pageNumber = 0;
 
-        if (!Number.isNaN(size) && size > 0 && size < 6) {
+        if (!Number.isNaN(size) && size > 0 && size < 10) {
             totalCount = size;
         }
 
