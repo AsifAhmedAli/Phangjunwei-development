@@ -8,6 +8,8 @@ module.exports = {
 
         // Get all merchants registered
         async allMerchants(root, { size, offset }, { models, user }) {
+            // console.log(user)
+
 
             if (!user) {
                 throw new Error("Please login to view all merchants");
@@ -25,6 +27,8 @@ module.exports = {
 
         // Get all information about a merchant
         async getMerchant(root, { id }, { models, user }) {
+            console.log(user)
+
             if (!user) {
                 throw new Error("Invalid Request")
             }

@@ -34,29 +34,45 @@ const cors = require('cors');
       merchantResolvers
     ),
     context: ({ req, res }) => {
-      let user = null;
+
       try {
-        // Fetching the user from the request Token
-        if (req.headers["authorization"]) {
-          const token = req.headers["authorization"]
-          const data = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-          user = data;
-        }
-      } catch (error) {
-        return {
+         const token=req.headers.authorization
+         console.log(token)
+         if(!token){
+          return {
+            models: modelsGraphql,
+            user: null,
+            req,
+            res,
+          };
+         }
+         const decoded=jwt.decode(token,process.ACCESS_TOKEN_SECRET)
+         console.log(decoded)
+         return {
           models: modelsGraphql,
-          user,
+          user: decoded,
           req,
           res,
-        }
+        };
+
+      } catch (error) {
+        console.log(error)
+        return {
+          models: modelsGraphql,
+          user: null,
+          req,
+          res,
+        };
       }
 
-      return {
-        models: modelsGraphql,
-        user,
-        req,
-        res,
-      };
+      // let user = null;
+
+     
+
+        // Fetching the user from the request Token
+      
+
+     
     },
   });
 
