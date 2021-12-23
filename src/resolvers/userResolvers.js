@@ -27,13 +27,51 @@ module.exports = {
                 throw new ForbiddenError("Token not valid, try signing in again");
             }
 
-            if (user.role !== 'Admin' || user.role !== 'Superadmin') {
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
                 throw new ForbiddenError("Not authorized");
             }
 
             try {
                 const result = await models.User.findByPk(id);
                 return result;
+
+            } catch (error) {
+                throw new Error(error.message);
+            }
+
+        },
+
+        // Get user with total orders and pending orders
+        async getUserInfo(root, { id }, { models, user }) {
+            if (!user) {
+                throw new ForbiddenError("Token not valid, try signing in again");
+            }
+
+            if (user.role !== 'Admin' && user.role !== 'Superadmin') {
+                throw new ForbiddenError("Not authorized");
+            }
+
+            try {
+                const result = await models.User.findByPk(id);
+                if (result) {
+                    const totalOrders = await models.Order.count({
+                        where: {
+                            userId: id,
+                        }
+                    });
+
+                    const pendingOrders = await models.OrderItem.count({
+                        where: {
+                            paymentStatus: 'Pending'
+                        }
+                    });
+
+                    return {
+                        user: result,
+                        totalOrders,
+                        pendingOrders
+                    }
+                }
 
             } catch (error) {
                 throw new Error(error.message);

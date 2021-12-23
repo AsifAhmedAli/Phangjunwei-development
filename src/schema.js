@@ -116,12 +116,20 @@ const typeDefs = gql`
     content: [Product]!
     totalPages: Int!
   }
+
+  type UserInfo{
+    user: User!
+    totalOrders: Int!,
+    pendingOrders: Int!,
+  }
+
   # Pagination return types END HERE
 
   type Query {
     # Users
     allUser(size: Int, offset: Int): AllUsers!
     getUser(id: Int!): User
+    getUserInfo(id: Int!): UserInfo
 
     # Merchants
     allMerchants(size: Int, offset: Int): AllMerchants!
@@ -144,6 +152,8 @@ const typeDefs = gql`
     getUserOrders(id: Int!): [OrderItem]
     getOrder(id: Int!): [OrderItem]
     allOrders: [OrderItem]
+    countUserOrders(id: Int!): Int!
+    countPendingOrders(id: Int!): Int!
   }
 
   type Mutation {

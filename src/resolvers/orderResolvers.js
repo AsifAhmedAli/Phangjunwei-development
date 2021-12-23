@@ -87,6 +87,50 @@ module.exports = {
                 throw new Error(error.message);
             }
         },
+
+        // Count user orders
+        async countUserOrders(root, { id }, { models, user }) {
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
+
+            try {
+                const count = await models.Order.count({ where: { userId: id } });
+
+                if (!count) {
+                    return 0;
+                }
+
+                return count;
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        },
+
+        // Orders count with pending status
+        async countPendingOrders(root, { id }, { models, user }) {
+            if (!user) {
+                throw new Error('You must be logged in to view this page')
+            }
+
+            try {
+                const userOrder = await models.Order.findAll({ where: { userId: id } });
+
+                if (!userOrder) {
+                    return 0;
+                }
+
+                const count = await models.OrderItem.count({ where: { OrderId: userOrder.id, paymentStatus: 'Pending' } });
+
+                if (!count) {
+                    return 0;
+                }
+
+                return count;
+            } catch (error) {
+                throw new Error(error.message);
+            }
+        }
     },
     Mutation: {
 
