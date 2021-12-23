@@ -31,6 +31,10 @@
  - Some express routes are also implemented for following functionalities:
    - Payment Gateway (Fomopay) [https://www.fomopay.com](https://www.fomopay.com)
    - Product Add, Merchant Add (Form Data containing Images Upload)
+   - Following Routes are Added for Specific Reasons:
+     - http://localhost:3000/api/payment
+     - http://localhost:3000/api/merchant/create
+     - http://localhost:3000/api/product/create 
 
 ### Cloudinary:<br/>
  - Cloudinary is used for all Images handling. Images are uploaded to cloudinary and URL is saved to Database. 
